@@ -16,7 +16,8 @@ class TestSmth:
         driver = get_driver()
         driver.get("https://www.apple.com")
         time.sleep(3)
-        assert driver.title == "Apple"
+        expected_title = "Apple"
+        assert driver.title == expected_title
 
     def test_login(self):
         driver = get_driver()
