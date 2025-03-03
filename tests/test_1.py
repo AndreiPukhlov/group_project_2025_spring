@@ -33,7 +33,7 @@ class TestSmth:
         # click navigation drawer
         driver.find_element("css selector", "#react-burger-menu-btn").click()
         # Logout button presented
-        time.sleep(1)
+        time.sleep(2)
         expected_result = driver.find_element("css selector", "#logout_sidebar_link").is_displayed()
         expected_url = "https://www.saucedemo.com/inventory.html"
         assert expected_result == True
