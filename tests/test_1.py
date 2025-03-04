@@ -24,7 +24,7 @@ class TestSmth:
         # open AUT
         driver.get(url)
         # enter user_name
-        driver.find_element("", "")
+        # driver.find_element("", "")
         driver.find_element("css selector", "#user-name").send_keys("standard_user")
         # enter_password
         driver.find_element("css selector", "#password").send_keys("secret_sauce")
@@ -36,5 +36,5 @@ class TestSmth:
         time.sleep(2)
         expected_result = driver.find_element("css selector", "#logout_sidebar_link").is_displayed()
         expected_url = "https://www.saucedemo.com/inventory.html"
-        assert expected_result == True
+        assert expected_result
         assert driver.current_url == expected_url
