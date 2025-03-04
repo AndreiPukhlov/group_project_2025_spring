@@ -47,5 +47,3 @@ class TestLogin:
         # An error message "Required" appears below the "Password" field
         expected_message = driver.find_element("xpath", "//span[text()='Required']").text
         assert expected_message == "Required"
-
-
