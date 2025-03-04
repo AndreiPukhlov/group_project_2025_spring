@@ -1,3 +1,4 @@
+import time
 
 from selenium import webdriver
 
@@ -33,3 +34,16 @@ class TestLogin:
         # todo add description to step
         expected_message = driver.find_element("xpath", "//span[text()='Required']").text
         assert expected_message == 'Required'
+
+    def test_password_required_field(self):
+        driver = get_driver()
+        # 1. Open the login page
+        driver.get(login_page_url)
+        # 2. Enter a valid username in the "Username" field.
+        driver.find_element("css selector", '[name="username"]').send_keys('Admin')
+        # 3. Click the "Login" button.
+        driver.find_element("css selector", '[type="submit"]').click()
+        # Expected result
+        # An error message "Required" appears below the "Password" field
+        expected_message = driver.find_element("xpath", "//span[text()='Required']").text
+        assert expected_message == "Required"
