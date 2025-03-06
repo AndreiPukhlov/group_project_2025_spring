@@ -38,7 +38,7 @@ class TestLogin:
     def test_invalid_username(self):
         driver = get_driver()
 
-        #1.Navigate to https://opensource-demo.orangehrmlive.com/web/index.php/auth/login
+        # 1.Navigate to https://opensource-demo.orangehrmlive.com/web/index.php/auth/login
         driver.get(login_page_url)
         # 2.Enter an invalid username to the "Username" field
         driver.find_element("css selector", '[name="username"]').send_keys('Admi')
