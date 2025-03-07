@@ -26,6 +26,7 @@ class TestLogin:
         # 3. click Login button
         driver.find_element("css selector", '[type="submit"]').click()
         # Expected result
+
         # Authorization denied
         assert driver.current_url == url.BASE_URL
         # Error message "username field" is required is appear on a screen
@@ -34,8 +35,10 @@ class TestLogin:
 
     def test_invalid_username(self, driver):
 
+
         # 1.Navigate to https://opensource-demo.orangehrmlive.com/web/index.php/auth/login
         driver.get(url.BASE_URL)
+
         # 2.Enter an invalid username to the "Username" field
         driver.find_element("css selector", '[name="username"]').send_keys('Admi')
         # 3. Enter valid password to the "Password" field
@@ -49,7 +52,25 @@ class TestLogin:
         expected_message = driver.find_element("xpath", "//p[text()='Invalid credentials']").text
         assert expected_message == 'Invalid credentials'
 
+
+
+    def test_username_password_fields_required(self):
+        driver = get_driver()
+        #1.Navigate to AUT
+        driver.get(login_page_url)
+        #2. Ensure that both the "Username" and "Password" fields are empty
+        #3. Click on the Login button
+        driver.find_element("css selector", '[type="submit"]').click()
+        # Expected result
+        #Under the Password and Username fields there are messages that these data are Required
+        assert driver.current_url == login_page_url
+        error_messages = driver.find_elements("xpath", "//span[text()='Required']")
+        assert error_messages[0].text == "Required" and error_messages[1].text == "Required"
+
+
+
     def test_password_required_field(self, driver):
+
 
         # 1. Open the login page
         driver.get(url.BASE_URL)
