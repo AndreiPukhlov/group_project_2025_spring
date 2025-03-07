@@ -32,7 +32,7 @@ class TestLogin:
         # Expected result
         # Authorization denied A hint "username field" is required is appear on a screen
         assert driver.current_url == login_page_url
-        # todo add description to step
+        # todo add description to step 2
         expected_message = driver.find_element("xpath", "//span[text()='Required']").text
         assert expected_message == 'Required'
 
