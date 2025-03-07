@@ -1,22 +1,17 @@
 Inlay hints -> Done
-
 'TODO' -> Done
-
 Implicitly wait -> Done
+conftest and python.ini   -> Done
+@pytest.marks -> Done
+urls pkg, data pkg, pages pkg urls pkg
 
+
+yield
 By
-
-Marks
+api
 
 Names in Python
-
-conftest and python.ini
-
-urls pkg
-
 locators pkg
-
 Base page
-
 Explicitly Wait
 
