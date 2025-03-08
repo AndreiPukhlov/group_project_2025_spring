@@ -82,7 +82,6 @@ class TestLogin:
         expected_message = error_message_element.text
         get_error_message_color = error_message_element.value_of_css_property("color")
 
-        # TODO Tamara add assertion for "user is not logged in"
         assert driver.current_url == url.LOGIN_URL
         assert expected_message == "Required"
 
