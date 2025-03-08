@@ -83,6 +83,7 @@ class TestLogin:
         get_error_message_color = error_message_element.value_of_css_property("color")
 
         # TODO Tamara add assertion for "user is not logged in"
+        assert driver.current_url == url.LOGIN_URL
         assert expected_message == "Required"
 
         try:
@@ -96,3 +97,17 @@ class TestLogin:
 
     def test_34563(self, driver):
         pass
+
+    def test_forgot_your_password_cancel(self, driver):
+        # 1. Open the login page
+        driver.get(url.LOGIN_URL)
+        # 2. Click on the 'Forgot your password?' link
+        driver.find_element("xpath", "//p[text()='Forgot your password? ']").click()
+        # 3. Enter an existing username in the 'Username' field
+        driver.find_element("css selector", '[name="username"]').send_keys(data.USER_NAME)
+        # 4. Click the 'Cancel' button
+        driver.find_element("xpath", "//button[text()=' Cancel ']").click()
+
+        # Expected result
+        # The user is returned to the login page
+        assert driver.current_url == url.LOGIN_URL
