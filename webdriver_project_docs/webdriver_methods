@@ -1,0 +1,48 @@
+Navigation
+    get(url): Loads a new web page in the current browser session.
+    current_url: Retrieves the URL of the currently loaded page.
+    refresh(): Refreshes the current page.
+    back(): Navigates to the previous page in history.
+    forward(): Navigates to the next page in history.
+
+Browser Management
+    title: Returns the title of the current page.
+    maximize_window(): Maximizes the current browser window.
+    minimize_window(): Minimizes the current browser window.
+    get_window_size(): Gets the width and height of the current window.
+    set_window_size(width, height): Sets the width and height of the current window.
+    quit(): Closes all browser windows and ends the WebDriver session.
+    close(): Closes the currently focused window.
+    current_window_handle: Returns the handle of the current window.
+    window_handles: Returns a list of handles for all open windows.
+
+Element Interaction
+    find_element(): Finds the first element matching the given criteria.
+    find_elements(): Finds all elements matching the given criteria.
+    click(): Clicks an element.
+    send_keys(value): Sends text to an element (e.g., input field).
+    clear(): Clears the text of an input field or text area.
+    text: Retrieves the visible text of an element.
+    is_displayed(): Checks if an element is currently visible.
+    is_enabled(): Checks if an element is enabled.
+    is_selected(): Checks if an element is selected (e.g., checkbox, radio button).
+    get_attribute(name): Gets the value of an element's attribute.
+    value_of_css_property(property_name): Gets the value of a CSS property of an element.
+    screenshot(filename): Saves a screenshot of the current element to a PNG file.
+
+Waits
+implicitly_wait(time_to_wait): Sets a default waiting time for elements to appear before throwing an exception.
+wait: Used with expected_conditions for explicit waits, allowing you to wait for specific conditions to be met before proceeding.
+
+Navigation within frames/windows
+switch_to.frame(frame_reference): Switches focus to the specified frame.
+switch_to.default_content(): Switches focus back to the main document.
+switch_to.window(window_name): Switches focus to the specified window.
+
+Script Execution
+execute_script(script, *args): Executes JavaScript code in the context of the current page.
+execute_async_script(script, *args): Executes asynchronous JavaScript code.
+
+Alerts
+switch_to.alert: Switches focus to an alert dialog, accept(): Accepts the alert, dismiss():
+Dismisses the alert, and text: Retrieves the text of the alert.
