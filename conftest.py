@@ -14,6 +14,11 @@ def driver():
 
     driver = webdriver.Chrome(options=options)
     driver.implicitly_wait(10)
-    return driver
+    yield driver
+    driver.quit()
 
 
+@pytest.fixture()
+def token():
+    options = Options()
+    return token
