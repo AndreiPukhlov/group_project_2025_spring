@@ -7,6 +7,7 @@ STATUS = "status/"
 PRODUCTS = "products/"
 CARTS = "carts/"
 ITEMS = 'items/'
+AUTHORIZATION = 'api-clients/'
 
 
 def test_status():
@@ -44,3 +45,12 @@ def test_post(token):
     response = requests.post(BASE_ENDPOINT + CARTS + cartID + ITEMS, json=json, headers=headers, cookies=cookies)
     print(response.json())
     print(response.status_code)
+
+
+def test_token():
+    json = {
+        "clientName": "User",
+        "clientEmail": "user@mail.com"
+    }
+    response = requests.post(BASE_ENDPOINT + AUTHORIZATION, json=json)
+    print(response.json())
