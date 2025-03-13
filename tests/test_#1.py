@@ -2,25 +2,32 @@ import time
 from selenium import webdriver
 
 
-def get_driver():
+def get_driver():   # function returns webdriver and can be used from anywhere
     driver = webdriver.Chrome()
     return driver
 
 
-url = "https://www.saucedemo.com/"
+driver_ = webdriver.Chrome()         # global variable
+url = "https://www.saucedemo.com/"   # global variable
 
 
 class TestSmth:
 
-    def test_apple(self):
-        driver = get_driver()
+    def test_url_status(self):
+        driver = webdriver.Chrome()               # local variable - not seen from outside the method
         driver.get("https://www.apple.com")
+        expected_url = "https://www.apple.com/"   # local variable - not seen from outside the method
+        assert driver.current_url == expected_url
+
+    def test_apple(self):
+
+        driver_.get("https://www.apple.com")   # global variable used
         time.sleep(3)
         expected_title = "Apple"
-        assert driver.title == expected_title
+        assert driver_.title == expected_title
 
     def test_login(self):
-        driver = get_driver()
+        driver = get_driver()              # function used
         # open AUT
         driver.get(url)
         # enter user_name
