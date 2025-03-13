@@ -75,6 +75,7 @@ class TestLogin:
         # The characters displayed in the “Password” field are hidden by bullet points
         password_field_type = "password"
         assert password_field_type == "password", f"Expected 'password', but got '{password_field_type}'"
+        # TODO нужно исправить проверку скрытого пароля
 
 
     def test_password_required_field(self, driver):
@@ -103,11 +104,6 @@ class TestLogin:
         except AssertionError as e:
             print(f"Warning: {e}")  # Logs the error but allows test execution to continue
 
-    def test_234423(self, driver):
-        pass
-
-    def test_34563(self, driver):
-        pass
 
     def test_forgot_your_password_cancel(self, driver):
         # 1. Open the login page
@@ -122,6 +118,6 @@ class TestLogin:
         # Expected result
         # The user is returned to the login page
         assert driver.current_url == url.LOGIN_URL
-        # TODO нужно исправить проверку скрытого пароля
+
 
 
