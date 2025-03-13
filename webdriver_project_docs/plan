@@ -4,14 +4,17 @@ Implicitly wait -> Done
 conftest and python.ini   -> Done
 @pytest.marks -> Done
 urls pkg, data pkg, pages pkg urls pkg
+api - done
 
-
-yield
+yield - repeat
 By
-api
+Base page
+Explicitly Wait
 
 Names in Python
 locators pkg
-Base page
-Explicitly Wait
+
+
+
+
 

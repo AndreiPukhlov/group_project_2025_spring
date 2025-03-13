@@ -64,8 +64,6 @@ class TestLogin:
         error_messages = driver.find_elements("xpath", "//span[text()='Required']")
         assert error_messages[0].text == "Required" and error_messages[1].text == "Required"
 
-
-
     def test_password_bullet_points(self, driver):
         # 1. Navigate to AUT
         driver.get(url.LOGIN_URL)
@@ -76,7 +74,6 @@ class TestLogin:
         password_field_type = "password"
         assert password_field_type == "password", f"Expected 'password', but got '{password_field_type}'"
         # TODO нужно исправить проверку скрытого пароля
-
 
     def test_password_required_field(self, driver):
 
@@ -104,7 +101,6 @@ class TestLogin:
         except AssertionError as e:
             print(f"Warning: {e}")  # Logs the error but allows test execution to continue
 
-
     def test_forgot_your_password_cancel(self, driver):
         # 1. Open the login page
         driver.get(url.LOGIN_URL)
@@ -118,6 +114,3 @@ class TestLogin:
         # Expected result
         # The user is returned to the login page
         assert driver.current_url == url.LOGIN_URL
-
-
-
