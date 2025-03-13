@@ -122,5 +122,6 @@ class TestLogin:
         # Expected result
         # The user is returned to the login page
         assert driver.current_url == url.LOGIN_URL
+        # TODO нужно исправить проверку скрытого пароля
 
 
