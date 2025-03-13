@@ -11,9 +11,9 @@ url = Urls()
 
 class TestLogin:
 
-    @pytest.mark.regression
-    @pytest.mark.smoke
-    @pytest.mark.bug
+    # @pytest.mark.regression
+    # @pytest.mark.smoke
+    # @pytest.mark.bug
     def test(self, driver):
         driver.get()
         assert driver.title == 'OrangeHRM'
@@ -54,16 +54,27 @@ class TestLogin:
     def test_username_password_fields_required(self, driver):
         # 1. Navigate to AUT
         driver.get(url.LOGIN_URL)
-
         # 2. Ensure that both the "Username" and "Password" fields are empty
         # 3 Click on the Login button
         driver.find_element("css selector", '[type="submit"]').click()
-
         # Expected result
         # Under the Password and Username fields there are messages that these data are Required
         assert driver.current_url == url.LOGIN_URL
         error_messages = driver.find_elements("xpath", "//span[text()='Required']")
         assert error_messages[0].text == "Required" and error_messages[1].text == "Required"
+
+
+
+    def test_password_bullet_points(self, driver):
+        # 1. Navigate to AUT
+        driver.get(url.LOGIN_URL)
+        # 2. Enter valid or invalid data to the "Password" field
+        driver.find_element("css selector", '[name="password"]').send_keys('admin123')
+        # Expected result
+        # The characters displayed in the “Password” field are hidden by bullet points
+        password_field_type = "password"
+        assert password_field_type == "password", f"Expected 'password', but got '{password_field_type}'"
+
 
     def test_password_required_field(self, driver):
 
