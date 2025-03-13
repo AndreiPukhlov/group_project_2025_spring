@@ -55,6 +55,7 @@ class TestLogin:
         # 1. Navigate to AUT
         driver.get(url.LOGIN_URL)
         # 2. Ensure that both the "Username" and "Password" fields are empty
+        # TODO На каждый шаг должно быть действие, нужно добавить код проверки того, что поля пустые
         # 3 Click on the Login button
         driver.find_element("css selector", '[type="submit"]').click()
         # Expected result
