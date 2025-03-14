@@ -15,7 +15,7 @@ def test_get_top_vendor():
 
 
 @pytest.mark.parametrize("country", ["USA", "France", "Germany"])
-def test_fetch_customers_by_country(db_connection, country):
+def test_fetch_customers_by_country(country):
     result = fetch_customers_by_country(country)
     pprint(result, indent=4)
 

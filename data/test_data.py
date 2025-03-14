@@ -1,3 +1,3 @@
 class TestData:
-    USER_NAME = "Admin"
-    USER_PASSWORD = "admin123"
+    ADMIN_NAME = "Admin"
+    ADMIN_PASSWORD = 'admin123'
