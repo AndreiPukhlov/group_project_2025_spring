@@ -88,7 +88,7 @@ class TestLogin:
         # The characters displayed in the “Password” field are hidden by bullet points
         password_field_type = page.element_is_visible(BULLET_POINTS_LOCATOR).get_attribute('type')
         assert password_field_type == "password", f"Expected 'password', but got '{password_field_type}'"
-        # TODO нужно исправить проверку скрытого пароля
+
 
     def test_password_required_field(self, driver):
 
