@@ -14,7 +14,6 @@ ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, os.pardir, os.pardir))
 
 # Database connection details
 
-
 DB_HOST = "localhost"
 DB_USER = os.getenv('DB_USER')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
