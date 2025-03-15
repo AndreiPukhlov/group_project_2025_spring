@@ -7,6 +7,7 @@ STATUS = "status/"
 PRODUCTS = "products/"
 CARTS = "carts/"
 ITEMS = 'items/'
+AUTHORIZATION = 'api-clients/'
 
 
 def test_status():
@@ -30,17 +31,10 @@ def test_add_cart():
     assert response.status_code == 201
 
 
-def test_post(token):
+def test_token():
     json = {
-        "productId": 5478
+        "clientName": "User",
+        "clientEmail": "user@mail.com"
     }
-    headers = {
-
-    }
-
-    cookies = {'token': token}
-
-    cartID = 'yoWBWsak2GB9DUoKY070Z/'
-    response = requests.post(BASE_ENDPOINT + CARTS + cartID + ITEMS, json=json, headers=headers, cookies=cookies)
+    response = requests.post(BASE_ENDPOINT + AUTHORIZATION, json=json)
     print(response.json())
-    print(response.status_code)
