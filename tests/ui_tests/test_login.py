@@ -37,7 +37,7 @@ class TestLogin:
         wait(driver, 23).until(EC.visibility_of_element_located(
             ("css selector", '[name="password"]'))).send_keys('admin123')
         # driver.find_element("css selector", '[name="password"]').send_keys('admin123')
-        # 3. click Login button
+        # 3. click the Login button
         driver.find_element(*LOGIN_BUTTON_LOCATOR).click()
         # Expected result
 
@@ -73,7 +73,7 @@ class TestLogin:
         # 3 Click on the Login button
         driver.find_element(*LOGIN_BUTTON_LOCATOR).click()
         # Expected result
-        # Under the Password and Username fields there are messages that these data are Required
+        # Under the Password and Username fields, there are messages that these data are Required
         assert driver.current_url == url.LOGIN_URL
         error_messages = driver.find_elements("xpath", "//span[text()='Required']")
         assert error_messages[0].text == "Required" and error_messages[1].text == "Required"
@@ -88,7 +88,6 @@ class TestLogin:
         # The characters displayed in the “Password” field are hidden by bullet points
         password_field_type = page.element_is_visible(BULLET_POINTS_LOCATOR).get_attribute('type')
         assert password_field_type == "password", f"Expected 'password', but got '{password_field_type}'"
-
 
     def test_password_required_field(self, driver):
 
