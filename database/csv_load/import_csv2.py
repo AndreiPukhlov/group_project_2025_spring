@@ -66,7 +66,7 @@ def import_csv(table_name=None, chunk_size=5000):
     # Read CSV
     df = pd.read_csv(file_path)
 
-    # Check if DataFrame is empty
+    # Check if the DataFrame is empty
     if df.empty:
         print("No data found in CSV.")
         return
