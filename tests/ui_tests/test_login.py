@@ -1,4 +1,4 @@
-from data.locators.login_locators import LoginPageLocators, LOGIN_BUTTON_LOCATOR, BULLET_POINTS_LOCATOR
+from data.locators.login_locators import LoginPageLocators
 from data.test_data import TestData
 from data.urls import Urls
 from pages.login_page import LoginPage
@@ -49,7 +49,7 @@ class TestLogin:
         # 3. Enter valid password to the "Password" field
         driver.find_element("css selector", '[name="password"]').send_keys(data.ADMIN_PASSWORD)
         # 4. Click on the Login button
-        driver.find_element(*LOGIN_BUTTON_LOCATOR).click()
+        driver.find_element(*locators.LOGIN_BUTTON_LOCATOR).click()
 
         # Expected result
         # The user is not logged in and a pop-up window appears on the screen
@@ -79,7 +79,7 @@ class TestLogin:
         driver.find_element("css selector", '[name="password"]').send_keys('admin123')
         # Expected result
         # The characters displayed in the “Password” field are hidden by bullet points
-        password_field_type = page.element_is_visible(BULLET_POINTS_LOCATOR).get_attribute('type')
+        password_field_type = page.element_is_visible(locators.BULLET_POINTS_LOCATOR).get_attribute('type')
         assert password_field_type == "password", f"Expected 'password', but got '{password_field_type}'"
 
     def test_password_required_field(self, driver):
@@ -90,7 +90,7 @@ class TestLogin:
         # 2. Enter a valid username in the "Username" field.
         driver.find_element("css selector", '[name="username"]').send_keys(data.ADMIN_NAME)
         # 3. Click the "Login" button.
-        driver.find_element(*LOGIN_BUTTON_LOCATOR).click()
+        driver.find_element(*locators.LOGIN_BUTTON_LOCATOR).click()
 
         # Expected result
         # An error message "Required" appears below the "Password" field
@@ -111,7 +111,7 @@ class TestLogin:
     def test_username_password_fields_required_pom(self, driver):
         page = LoginPage(driver, url.LOGIN_URL)
         page.open()
-        page.element_is_visible(LOGIN_BUTTON_LOCATOR).click()
+        page.element_is_visible(locators.LOGIN_BUTTON_LOCATOR).click()
         # driver.find_element(*LOGIN_BUTTON_LOCATOR).click()
         assert driver.current_url == url.LOGIN_URL
         # error_messages = page.element_is_visible(*("xpath", "//span[text()='Required']"))
