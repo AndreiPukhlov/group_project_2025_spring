@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        M2_HOME = '/path/to/maven'
+        PATH = "${M2_HOME}/bin:${env.PATH}"
+    }
 
     stages {
         stage('Checkout') {
