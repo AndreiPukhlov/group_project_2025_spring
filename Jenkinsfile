@@ -1,8 +1,14 @@
 pipeline {
     agent any
 
+
     stages {
-        stage('Debug Environment') {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/AndreiPukhlov/group_project_2025_spring.git'
+            }
+        }
+         stage('Debug Environment') {
             steps {
                 sh '''#!/bin/bash
                     echo "PATH: $PATH"
@@ -11,14 +17,6 @@ pipeline {
                     which python3
                     which pip
                 '''
-            }
-        }
-    }
-
-    stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/AndreiPukhlov/group_project_2025_spring.git'
             }
         }
 
