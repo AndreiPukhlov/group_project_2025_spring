@@ -1,7 +1,21 @@
 pipeline {
-    agent any  // Run on any available agent
+    agent any
 
     stages {
+        stage('Debug Environment') {
+            steps {
+                sh '''#!/bin/bash
+                    echo "Current directory: $(pwd)"
+                    echo "PATH: $PATH"
+                    echo "User: $(whoami)"
+                    which bash
+                    which python3
+                    which pip
+                    ls -l
+                '''
+            }
+        }
+
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/AndreiPukhlov/group_project_2025_spring.git'
@@ -30,7 +44,7 @@ pipeline {
 
     post {
         always {
-            junit 'test-results.xml'  // Publish test results
+            junit 'test-results.xml'
         }
     }
 }
