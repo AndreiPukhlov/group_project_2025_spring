@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/AndreiPukhlov/group_project_2025_spring.git'
+                git branch: 'main', url: 'https://github.com/AndreiPukhlov/group_project_2025_spring.git'
             }
         }
 
@@ -22,7 +22,7 @@ pipeline {
             steps {
                 sh '''
                     source venv/bin/activate
-                    python -m pytest tests/
+                    python -m pytest tests/ --junitxml=test-results.xml
                 '''
             }
         }
@@ -30,7 +30,7 @@ pipeline {
 
     post {
         always {
-            junit '**/test-results.xml'
+            junit 'test-results.xml'
         }
     }
 }
