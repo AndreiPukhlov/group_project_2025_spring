@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        PATH = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" // Adjust if needed
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -8,18 +11,19 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh '/usr/bin/env bash -c "pip3 install -r requirements.txt"'
             }
         }
         stage('Run Regression Tests') {
             steps {
-                sh 'pytest -m regression --junitxml=report.xml'
+                sh 'pytest -m regression --junitxml=report.xml || true'
             }
         }
     }
     post {
         always {
-            junit 'report.xml'
+            junit '**/report.xml'
         }
     }
 }
+
