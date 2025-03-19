@@ -1,29 +1,36 @@
 pipeline {
     agent any
-    environment {
-        PATH = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" // Adjust if needed
-    }
+
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/AndreiPukhlov/group_project_2025_spring.git'
+                git 'https://github.com/AndreiPukhlov/group_project_2025_spring.git'
             }
         }
+
         stage('Install Dependencies') {
             steps {
-                sh '/usr/bin/env bash -c "pip3 install -r requirements.txt"'
+                sh '''
+                    python3 -m venv venv
+                    source venv/bin/activate
+                    pip install -r requirements.txt
+                '''
             }
         }
+
         stage('Run Regression Tests') {
             steps {
-                sh 'pytest -m regression --junitxml=report.xml || true'
+                sh '''
+                    source venv/bin/activate
+                    python -m pytest tests/
+                '''
             }
         }
     }
+
     post {
         always {
-            junit '**/report.xml'
+            junit '**/test-results.xml'
         }
     }
 }
-
