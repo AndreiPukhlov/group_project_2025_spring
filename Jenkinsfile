@@ -1,8 +1,7 @@
 pipeline {
     agent any
     environment {
-        M2_HOME = '/opt/apache-maven'  // Define your M2_HOME if necessary
-        PATH = "${env.PATH}:${M2_HOME}/bin"  // Correctly append Maven's bin directory to PATH
+        '/opt/apache-maven/bin:/opt/apache-maven/bin'
     }
     stages {
         stage('Debug Environment') {
