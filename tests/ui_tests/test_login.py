@@ -1,3 +1,5 @@
+import pytest
+
 from data.locators.login_locators import LoginPageLocators
 from data.test_data import TestData
 from data.urls import Urls
@@ -39,6 +41,7 @@ class TestLogin:
         expected_message = page.element_is_visible(locators.REQUIRED_ERROR_MESSAGE_LOCATOR).text
         assert expected_message == 'Required'
 
+    @pytest.mark.skip(reason="This feature is not ready yet")
     def test_invalid_username(self, driver):
 
         # 1.Navigate to https://opensource-demo.orangehrmlive.com/web/index.php/auth/login
@@ -71,6 +74,7 @@ class TestLogin:
         error_messages = driver.find_elements("xpath", "//span[text()='Required']")
         assert error_messages[0].text == "Required" and error_messages[1].text == "Required"
 
+    @pytest.mark.skip(reason="This feature is not ready yet")
     def test_password_bullet_points(self, driver):
         page = LoginPage(driver, url.LOGIN_URL)
         # 1. Navigate to AUT

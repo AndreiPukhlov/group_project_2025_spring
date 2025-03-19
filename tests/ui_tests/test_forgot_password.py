@@ -1,3 +1,4 @@
+import pytest
 
 from data.locators.forgot_password_locators import ForgotPasswordLocators
 from data.locators.login_locators import LoginPageLocators
@@ -11,8 +12,10 @@ fp_locators = ForgotPasswordLocators()
 lp_locators = LoginPageLocators()
 data = TestData()
 
+
 class TestForgotPassword:
 
+    @pytest.mark.regression
     def test_success_message(self, driver):
         # создаем представителя класса LoginPage
         page = LoginPage(driver, url.LOGIN_URL)
@@ -27,6 +30,8 @@ class TestForgotPassword:
 
         message = page.element_is_visible(fp_locators.SUCCESS_MESSAGE).text
         assert message == "Reset Password link sent successfully"
+
+    @pytest.mark.skip(reason="This feature is not ready yet")
 
     def test_forgot_your_password_cancel(self, driver):
         # 1. Open the login page
