@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/user/repo.git'
+                git branch: 'main', url: 'https://github.com/AndreiPukhlov/group_project_2025_spring.git'
             }
         }
         stage('Install Dependencies') {
@@ -16,12 +16,10 @@ pipeline {
                 sh 'pytest -m regression --junitxml=report.xml'
             }
         }
-        stage('Publish Reports') {
-            post {
-                always {
-                    junit 'report.xml'
-                }
-            }
+    }
+    post {
+        always {
+            junit 'report.xml'
         }
     }
 }
