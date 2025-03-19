@@ -1,52 +1,53 @@
 pipeline {
-    agent any
-    environment {
-        '/opt/apache-maven/bin:/opt/apache-maven/bin'
-    }
-    stages {
-        stage('Debug Environment') {
-            steps {
-                sh '''#!/bin/bash
-                    echo "Current directory: $(pwd)"
-                    echo "PATH: $PATH"
-                    echo "User: $(whoami)"
-                    which bash
-                    which python3
-                    which pip
-                    ls -l
-                '''
-            }
-        }
+    agent any  // Runs the pipeline on any available agent
 
+    environment {
+        // Correctly setting the PATH variable to include Maven
+        PATH = "/opt/apache-maven/bin:$PATH"
+    }
+
+    stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/AndreiPukhlov/group_project_2025_spring.git'
+                // Checkout the repository to the Jenkins workspace
+                git 'https://github.com/AndreiPukhlov/group_project_2025_spring.git'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Setup Virtual Environment') {
             steps {
-                sh '''#!/bin/bash
-                    python3 -m venv venv
-                    source venv/bin/activate
-                    pip install -r requirements.txt
-                '''
+                script {
+                    // Check if the virtual environment exists
+                    if (!fileExists('.venv')) {
+                        // If .venv doesn't exist, create it and install dependencies
+                        sh 'python3 -m venv .venv'  // Create the virtual environment
+                        sh '.venv/bin/pip install --upgrade pip'  // Upgrade pip
+                        sh '.venv/bin/pip install -r requirements.txt'  // Install dependencies
+                    }
+                }
             }
         }
 
-        stage('Run Regression Tests') {
+        stage('Load Environment Variables') {
             steps {
-                sh '''#!/bin/bash
-                    source venv/bin/activate
-                    python -m pytest tests/ --junitxml=test-results.xml
-                '''
+                script {
+                    // Check if the .env file exists and load it
+                    if (fileExists('.env')) {
+                        sh 'export $(cat .env | grep -v "^#" | xargs)'  // Export env variables from .env file
+                    } else {
+                        echo ".env file not found"
+                    }
+                }
             }
         }
-    }
 
-    post {
-        always {
-            junit 'test-results.xml'
+        stage('Run Tests') {
+            steps {
+                script {
+                    // Activate the virtual environment and run tests with pytest
+                    sh '.venv/bin/pytest -m "regression and not bug and not skip"'
+                }
+            }
         }
     }
 }
