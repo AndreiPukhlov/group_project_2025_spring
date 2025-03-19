@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        M2_HOME = '/path/to/maven'
+        M2_HOME = '/opt/apache-maven'
         PATH = "${M2_HOME}/bin:${env.PATH}"
     }
 
