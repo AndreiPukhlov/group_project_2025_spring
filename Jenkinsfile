@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'your-custom-python-image'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any  // Run on any available agent
 
     stages {
         stage('Checkout') {
@@ -35,7 +30,7 @@ pipeline {
 
     post {
         always {
-            junit 'test-results.xml'
+            junit 'test-results.xml'  // Publish test results
         }
     }
 }
