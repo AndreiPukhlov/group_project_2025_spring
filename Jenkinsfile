@@ -7,10 +7,9 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout SCM') {
             steps {
-                // Checkout the repository to the Jenkins workspace
-                git 'https://github.com/AndreiPukhlov/group_project_2025_spring.git'
+                git branch: 'main', url: 'https://github.com/AndreiPukhlov/group_project_2025_spring.git'
             }
         }
 
