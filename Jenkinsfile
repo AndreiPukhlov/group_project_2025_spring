@@ -1,16 +1,12 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'your-custom-python-image'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     stages {
-        stage('Debug Workspace') {
-            steps {
-                sh '''#!/bin/bash
-                    echo "Workspace: $(pwd)"
-                    ls -l
-                '''
-            }
-        }
-
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/AndreiPukhlov/group_project_2025_spring.git'
