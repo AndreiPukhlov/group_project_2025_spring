@@ -2,8 +2,8 @@ pipeline {
     agent any  // Runs the pipeline on any available agent
 
     environment {
-        // Add environment variables that are needed globally, if required
-        SELENIUM_HEADLESS = 'true'  // Example to force headless mode
+        // Correctly setting the PATH variable to include Maven
+        PATH = "/opt/apache-maven/bin:$PATH"
     }
 
     stages {
@@ -48,19 +48,6 @@ pipeline {
                     sh '.venv/bin/pytest -m "regression and not bug and not skip"'
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            // Optional: Clean up or report results
-            echo 'Cleaning up after tests...'
-        }
-        success {
-            echo 'Tests passed!'
-        }
-        failure {
-            echo 'Tests failed!'
         }
     }
 }
