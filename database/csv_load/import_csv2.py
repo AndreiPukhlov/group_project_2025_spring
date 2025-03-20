@@ -10,10 +10,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 # Database and file details
-db_name = "EV"
-csv_file_name = "Electric_Vehicle_Population_Data.csv"
+db_name = "English"
+csv_file_name = "English_dictionary_most_common_words.csv"
 
 # Get the current script's directory (absolute path)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -21,13 +20,20 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Move up to the root directory (go up two levels)
 ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, os.pardir, os.pardir))
 
-
 # Database connection details
 DB_HOST = os.getenv('DB_HOST')
 DB_USER = os.getenv('DB_USER')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
 
 file_path = os.path.join(ROOT_DIR, 'data', 'csv_files', csv_file_name)
+
+
+def get_execution_time(func):
+    start_time = time.time()
+    func()
+    end_time = time.time()
+    importing_time = (end_time - start_time) / 60
+    print(f"It took {importing_time} minutes to import this csv file")
 
 
 def create_database():
@@ -56,8 +62,8 @@ create_database()
 engine = create_engine(f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{db_name}")
 
 
-def import_csv(table_name=None, chunk_size=5000):
-    start_time = time.time()
+@get_execution_time
+def import_csv(table_name=None, chunk_size=5000):   # Table name could be added here
     """Dynamically import CSV data into a MySQL table"""
     if not os.path.exists(file_path):
         print(f"File not found: {file_path}")
@@ -80,7 +86,7 @@ def import_csv(table_name=None, chunk_size=5000):
 
     print(f"Importing {file_path} into `{table_name}`")
 
-    # Infer column types and create table if not exists
+    # Get column types and create table if not exists
     metadata = MetaData()
     metadata.reflect(bind=engine)
 
@@ -88,7 +94,7 @@ def import_csv(table_name=None, chunk_size=5000):
         df.head(0).to_sql(table_name, engine, if_exists="fail", index=False)
         print(f"Table `{table_name}` created.")
 
-    # Insert data in chunks
+    # Insert data in chunks - for big files
     try:
         print(f"Inserting data into `{table_name}`...")
         df.to_sql(table_name, engine, if_exists="append", index=False, chunksize=chunk_size, method="multi")
@@ -96,10 +102,7 @@ def import_csv(table_name=None, chunk_size=5000):
     except OperationalError as e:
         print(f"Error inserting data: {e}")
         print(df.head())  # Print the first few rows of the DataFrame to inspect what's being inserted
-    end_time = time.time()
-    importing_time = (end_time - start_time) / 60
-    print(f"It took {importing_time} minutes to import this csv file")
 
 
-# Import the CSV file
-import_csv()
+
+
