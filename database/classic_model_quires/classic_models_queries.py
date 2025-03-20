@@ -46,9 +46,11 @@ most_sold_product_query = """
         """
 
 buyprice_msrp_difference_query = """
-    select productName, buyPrice, MSRP, (buyPrice - MSRP) as marge
-        from products
-    order by productName;
+   SELECT SUM(prod.msrp * det.quantityOrdered) as msrp_sales, 
+SUM(prod.buyPrice * det.quantityOrdered) as buyPrice_sales,
+SUM(prod.msrp * det.quantityOrdered) - SUM(prod.buyPrice * det.quantityOrdered) as difference_in_sales
+FROM classicmodels.products prod
+JOIN classicmodels.orderdetails det on prod.productCode = det.productCode;
             """
 
 get_union_buyprice_query = """
