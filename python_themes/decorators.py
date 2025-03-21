@@ -1,4 +1,6 @@
 # @fancy_decorator
+import time
+
 
 def fancy_decorator(func):
     def wrapper():
@@ -10,27 +12,34 @@ def fancy_decorator(func):
 
     return wrapper
 
-@fancy_decorator
+
+
 def add():
-    print(f"    Result is: {1 + 12}")
+    print(f"Result is: {1 + 12}")
+
 
 
 def say_hello():
     print("Hello!")
 
 
+
 def say_hi():
     print('Hi!')
+
 
 
 def say_hey():
     print("Hey!")
 
 
-# say_hi()
-# print()
-# say_hey()
-# print()
-# say_hello()
-# print()
+say_hi()
+print()
+say_hey()
+print()
+say_hello()
+print()
 add()
+
+
+
