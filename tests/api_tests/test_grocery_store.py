@@ -1,5 +1,6 @@
 from pprint import pprint
 
+import pytest
 import requests
 
 BASE_ENDPOINT = "https://simple-grocery-api.store/"
@@ -9,20 +10,20 @@ CARTS = "carts/"
 ITEMS = 'items/'
 AUTHORIZATION = 'api-clients/'
 
-
+@pytest.mark.regression
 def test_status():
     response = requests.get(BASE_ENDPOINT + STATUS)
     assert response.json()['status'] == "UP"
     assert response.status_code == 200
 
-
+@pytest.mark.regression
 def test_all_products():
     response = requests.get(BASE_ENDPOINT + PRODUCTS)
     pprint(response.json(), indent=4)
     assert len(response.json()) == 20
     assert len(str(response.json()[0]['id'])) == 4
 
-
+@pytest.mark.regression
 def test_add_cart():
     response = requests.post(BASE_ENDPOINT + CARTS)
     print(response.json())
@@ -30,7 +31,7 @@ def test_add_cart():
     assert response.json()['created']
     assert response.status_code == 201
 
-
+@pytest.mark.regression
 def test_token():
     json = {
         "clientName": "User",

@@ -6,14 +6,19 @@ conftest and python.ini   -> Done
 urls pkg, data pkg, pages pkg urls pkg
 api - done
 
-yield - repeat
-By
-Base page
-Explicitly Wait
+yield - repeat - done
+By - done
+Base page - done
+Explicitly Wait - done
 
-Names in Python
+
 locators pkg
+urls pkg
+data pkg
 
+sample form - alerts, window_handle, iFrame
+https://skryabin.com/webdriver/html/sample.html
+Names in Python
 
 
 
