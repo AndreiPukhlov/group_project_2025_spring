@@ -8,11 +8,13 @@ from sqlalchemy import create_engine, MetaData
 from sqlalchemy.exc import OperationalError
 from dotenv import load_dotenv
 
+from python_themes.decorators import timer
+
 load_dotenv()
 
 # Database and file details
 db_name = "English"
-csv_file_name = "English_dictionary_most_common_words.csv"
+csv_file_name = "English_dictionary_master.csv"
 
 # Get the current script's directory (absolute path)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -62,7 +64,7 @@ create_database()
 engine = create_engine(f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{db_name}")
 
 
-@get_execution_time
+@timer
 def import_csv(table_name=None, chunk_size=5000):   # Table name could be added here
     """Dynamically import CSV data into a MySQL table"""
     if not os.path.exists(file_path):
