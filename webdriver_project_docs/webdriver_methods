@@ -20,7 +20,7 @@ Element Interaction
     find_element(): Finds the first element matching the given criteria.
     find_elements(): Finds all elements matching the given criteria.
     click(): Clicks an element.
-    send_keys(value): Sends text to an element (e.g., input field).
+    send_keys(): Sends text to an element (e.g., input field).
     clear(): Clears the text of an input field or text area.
     text: Retrieves the visible text of an element.
     is_displayed(): Checks if an element is currently visible.
