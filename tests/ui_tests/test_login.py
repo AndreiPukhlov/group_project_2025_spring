@@ -22,14 +22,14 @@ class TestLogin:
         page = LoginPage(driver, url.LOGIN_URL)
         page.open()
 
-        assert driver.title == 'OrangeHRM'
+        assert driver.title == data.ORANGE_HRM_PAGE_TITLE
 
     def test_pom(self, driver):
         page = LoginPage(driver, home_page_url)
         page.open()
         actual = driver.title
 
-        assert actual == 'OrangeHRM'
+        assert actual == data.ORANGE_HRM_PAGE_TITLE
 
     def test_username_required_field(self, driver):
         page = LoginPage(driver, url.LOGIN_URL)
@@ -39,7 +39,7 @@ class TestLogin:
 
         assert driver.current_url == url.LOGIN_URL
         expected_message = page.element_is_visible(locators.REQUIRED_ERROR_MESSAGE_LOCATOR).text
-        assert expected_message == 'Required'
+        assert expected_message == data.REQUIRED_FIELD_ERROR_MESSAGE
 
     @pytest.mark.skip(reason="This feature is not ready yet")
     def test_invalid_username(self, driver):
@@ -75,7 +75,7 @@ class TestLogin:
         # 1. Navigate to AUT
         driver.get(url.LOGIN_URL)
         # 2. Enter valid or invalid data to the "Password" field
-        driver.find_element("css selector", '[name="password"]').send_keys('admin123')
+        driver.find_element("css selector", '[name="password"]').send_keys(data.ADMIN_PASSWORD)
         # Expected result
         # The characters displayed in the “Password” field are hidden by bullet points
         password_field_type = page.element_is_visible(locators.BULLET_POINTS_LOCATOR).get_attribute('type')
