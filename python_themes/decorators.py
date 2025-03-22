@@ -34,20 +34,18 @@ def fancy_decorator(func):
     return wrapper
 
 
-@fancy_decorator
 def seld_pod_shuboy():
     print("Сельдь под шубой")
 
-@fancy_decorator
+
 def olivie():
     print("Оливье!")
 
-@timer
 @fancy_decorator
 def mimoza():
     print('Мимоза')
 
-@fancy_decorator
+
 def vesenniy():
     print("Весенний!")
 
@@ -63,8 +61,6 @@ def vesenniy():
 mimoza()
 
 
-@fancy_decorator
-@timer
 def sleeeeep():
     time.sleep(1)
 
