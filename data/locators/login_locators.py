@@ -7,3 +7,4 @@ class LoginPageLocators:
     REQUIRED_ERROR_MESSAGE_LOCATOR = (By.XPATH, "//span[text()='Required']")
     LOGIN_BUTTON_LOCATOR = (By.CSS_SELECTOR, '[type="submit"]')
     BULLET_POINTS_LOCATOR = (By.CSS_SELECTOR, "[type='password']")
+
