@@ -1,4 +1,3 @@
-import datetime
 import os
 import time
 
@@ -7,8 +6,7 @@ import mysql.connector
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.exc import OperationalError
 from dotenv import load_dotenv
-
-from python_themes.decorators import timer
+from utilities.decorators import time_count
 
 load_dotenv()
 
@@ -64,8 +62,8 @@ create_database()
 engine = create_engine(f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{db_name}")
 
 
-@timer
-def import_csv(table_name=None, chunk_size=5000):   # Table name could be added here
+@time_count
+def import_csv(table_name=None, chunk_size=5000):  # Table name could be added here
     """Dynamically import CSV data into a MySQL table"""
     if not os.path.exists(file_path):
         print(f"File not found: {file_path}")
@@ -106,5 +104,4 @@ def import_csv(table_name=None, chunk_size=5000):   # Table name could be added 
         print(df.head())  # Print the first few rows of the DataFrame to inspect what's being inserted
 
 
-
-
+import_csv()
