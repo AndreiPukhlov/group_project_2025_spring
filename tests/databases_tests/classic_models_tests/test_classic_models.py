@@ -3,7 +3,7 @@ from pprint import pprint
 import pytest
 from database.classic_model_quires.classic_models_queries import *
 
-@pytest.mark.skip
+@pytest.mark.database
 def test_get_top_vendor(db_cursor):
     """Test the get_top_vendor function using a fixture."""
     db_cursor.execute(get_top_vendor_query)
@@ -11,7 +11,7 @@ def test_get_top_vendor(db_cursor):
     print(result)
     assert result is not None
 
-@pytest.mark.skip
+@pytest.mark.database
 @pytest.mark.parametrize("country", ["USA", "France", "Germany"])
 def test_fetch_customers_by_country(db_cursor, country):
     db_cursor.execute(fetch_customers_by_country_query, (country,))
@@ -19,14 +19,14 @@ def test_fetch_customers_by_country(db_cursor, country):
     pprint(result, indent=4)
     assert any(country in row[2] for row in result)
 
-@pytest.mark.skip
+@pytest.mark.database
 def test_get_vendors_product_lines_products(db_cursor):
     db_cursor.execute(vendors_product_lines_products_query)
     result = db_cursor.fetchone()
     print(result)
     assert result == (110, 7, 13)
 
-@pytest.mark.skip
+@pytest.mark.database
 def test_get_avg_msrp_buy_price(db_cursor):
     db_cursor.execute(avg_msrp_buy_price_query)
     result = db_cursor.fetchall()
@@ -37,7 +37,7 @@ def test_get_avg_msrp_buy_price(db_cursor):
     assert result[0]['productVendor'].__contains__('Welly Diecast Productions')
     assert len(result) == 13
 
-@pytest.mark.skip
+@pytest.mark.database
 def test_max_sails_vendor(db_cursor):
     db_cursor.execute(max_sails_vendor_query)
     result = db_cursor.fetchone()
@@ -45,7 +45,7 @@ def test_max_sails_vendor(db_cursor):
     from decimal import Decimal
     assert result == ({'productVendor': 'Classic Metal Creations', 'total_orders': Decimal('9678')})
 
-@pytest.mark.skip
+@pytest.mark.database
 def test_most_sold_product(db_cursor):
     db_cursor.execute(most_sold_product_query)
     result = db_cursor.fetchone()

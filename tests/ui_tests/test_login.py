@@ -32,6 +32,7 @@ class TestLogin:
     def test_username_required_field(self, driver):
         # 1.Go to login page AUT - Application Under Test
         page = LoginPage(driver, url.LOGIN_URL)
+        page.open()
         # 2. Input valid password in a "password" field. (Password: admin123)
         page.element_is_visible(locators.PASSWORD_FIELD).send_keys(data.ADMIN_PASSWORD)
         # 3. click the Login button

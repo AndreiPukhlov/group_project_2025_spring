@@ -39,8 +39,10 @@ def db_cursor(db_connection):
 
 @pytest.fixture()
 def driver():
+    headless = os.getenv("HEADLESS", "false").lower() == "true"
     options = Options()
-
+    if headless:
+        options.add_argument("--headless")
     # options.add_argument("--headless")
     # chrome_options.add_argument("--incognito")
     options.add_argument("--window-size=1920,1080")
