@@ -7,7 +7,7 @@ def get_driver():   # function returns webdriver and can be used from anywhere
     return driver
 
 
-driver_ = webdriver.Chrome()         # global variable
+browser = webdriver.Chrome()         # global variable
 url = "https://www.saucedemo.com/"   # global variable
 
 
@@ -21,10 +21,10 @@ class TestSmth:
 
     def test_apple(self):
 
-        driver_.get("https://www.apple.com")   # global variable used
+        browser.get("https://www.apple.com")   # global variable used
         time.sleep(3)
         expected_title = "Apple"
-        assert driver_.title == expected_title
+        assert browser.title == expected_title
 
     def test_login(self):
         driver = get_driver()              # function used
