@@ -1,8 +1,8 @@
 import pytest
 
+from data.admin_test_data import TestData
 from data.locators.forgot_password_locators import ForgotPasswordLocators
 from data.locators.login_locators import LoginPageLocators
-from data.test_data import TestData
 from data.urls import Urls
 from pages.forgot_password_page import ForgotPasswordPage
 from pages.login_page import LoginPage
@@ -18,17 +18,17 @@ class TestForgotPassword:
     @pytest.mark.regression
     def test_success_message(self, driver):
         # создаем представителя класса LoginPage
-        page = LoginPage(driver, url.LOGIN_URL)
-        page.open()
-        page.element_is_visible(lp_locators.FORGOT_PASSWORD_LOCATOR).click()
+        page_lp = LoginPage(driver, url.LOGIN_URL)
+        page_lp.open()
+        page_lp.element_is_visible(lp_locators.FORGOT_PASSWORD_LOCATOR).click()
 
         # создаем представителя класса ForgotPasswordPage
-        page = ForgotPasswordPage(driver, "")
-        page.element_is_visible(fp_locators.USERNAME_FIELD).send_keys(data.ADMIN_NAME)
+        page_fp = ForgotPasswordPage(driver, "")
+        page_fp.element_is_visible(fp_locators.USERNAME_FIELD).send_keys(data.ADMIN_NAME)
 
-        page.element_is_visible(fp_locators.SUBMIT_BUTTON).click()
+        page_fp.element_is_visible(fp_locators.SUBMIT_BUTTON).click()
 
-        message = page.element_is_visible(fp_locators.SUCCESS_MESSAGE).text
+        message = page_fp.element_is_visible(fp_locators.SUCCESS_MESSAGE).text
         assert message == "Reset Password link sent successfully"
 
     @pytest.mark.regression

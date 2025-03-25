@@ -1,8 +1,7 @@
 import pytest
 
-
+from data.admin_test_data import TestData
 from data.locators.login_locators import LoginPageLocators
-from data.test_data import TestData
 from data.urls import Urls
 from pages.login_page import LoginPage
 
