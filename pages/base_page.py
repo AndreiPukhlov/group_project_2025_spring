@@ -31,6 +31,9 @@ class BasePage(object):
     def element_is_present(self, locator, timeout=None):
         return WAIT(self.driver, timeout or self.timeout).until(EC.presence_of_element_located(locator))
 
+    def elements_are_present(self, locator, timeout=None):
+        return WAIT(self.driver, timeout or self.timeout).until(EC.presence_of_all_elements_located(locator))
+
     def alert_is_visible(self, timeout=None):
         WAIT(self.driver, timeout or self.timeout).until(EC.alert_is_present())
 
@@ -50,6 +53,9 @@ class BasePage(object):
     def select_by_text(self, locator, txt):
         Select(self.element_is_visible(locator)).select_by_visible_text(txt)
 
+    def select_by_value(self, locator, value):
+        Select(self.element_is_visible(locator)).select_by_value(value)
+
     def get_element_by_locator(self, locator):
         return self.element_is_visible(locator)
 
@@ -60,19 +66,52 @@ class BasePage(object):
         data = self.element_is_visible(locator)
         return data.value_of_css_property(property_name)
 
-    @staticmethod
-    def get_alert_text(alert):
-        alert_text = alert.text
+    def alert(self):
+        return self.driver.switch_to.alert
+
+    def get_alert_text(self):
+        alert_text = self.alert().text
         return alert_text
 
-    @staticmethod
-    def alert_accept(alert):
-        alert.accept()
+    def alert_accept(self):
+        self.alert().accept()
 
-    @staticmethod
-    def alert_send_prompt(alert, prompt):
-        alert.send_keys(prompt)
+    def alert_send_prompt(self, prompt):
+        self.alert().send_keys(prompt)
 
-    @staticmethod
-    def alert_dismiss(alert):
-        alert.dismiss()
+    def alert_dismiss(self):
+        self.alert().dismiss()
+
+    def switch_to_iframe(self, element):
+        self.driver.switch_to.frame(element)
+
+    def switch_out_of_iframe(self):
+        self.driver.switch_to.default_content()
+
+    def get_element_after(self, locator):
+        element = self.element_is_visible(locator)
+        content = self.driver.execute_script("""
+            var element = arguments[0];
+            var style = window.getComputedStyle(element, "::after");
+            return style.getPropertyValue("content");
+        """, element)
+        return content
+
+    def get_element_before(self, locator):
+        element = self.element_is_visible(locator)
+        content = self.driver.execute_script("""
+                    var element = arguments[0];
+                    var style = window.getComputedStyle(element, "::before");
+                    return style.getPropertyValue("content");
+                """, element)
+        return content
+
+    def get_element_color(self, locator):
+        element = self.get_element_by_locator(locator)
+        color = element.value_of_css_property("color")
+        return color
+
+    def get_element_content(self, locator):
+        element = self.get_element_by_locator(locator)
+        content = element.value_of_css_property("content")
+        return content
