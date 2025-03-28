@@ -10,7 +10,7 @@ class SamplePerson:
     gender: str = None
     address: str = None
     email: str = None
-    phone_number: str = None
+    phone_number: int = None
     contact_person_name: str = None
     contact_person_phone_number: str = None
 

@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver.common.by import By
 from pathlib import Path
 from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female, \
-    random_country_generator
+    random_country_generator, valid_password_five_chars
 from pages.sample_form_page import SampleFormPage
 
 person = generate_sample_person_male()
@@ -10,7 +10,7 @@ person2 = generate_sample_person_female()
 
 url = "https://skryabin.com/webdriver/html/sample.html"
 
-# locators for sample form
+# locators for the sample form
 NAME_FIELD = (By.CSS_SELECTOR, '#name')
 FIRST_NAME_FIELD = (By.ID, 'firstName')
 LAST_NAME_FIELD = (By.ID, 'lastName')
@@ -32,8 +32,7 @@ ADDITIONAL_INFO_IFRAME = (By.CSS_SELECTOR, '[name="additionalInfo"]')
 CONTACT_PERSON_NAME_IFRAME = (By.ID, 'contactPersonName')
 CONTACT_PERSON_PHONE_IFRAME = (By.ID, 'contactPersonPhone')
 
-
-# locators for result page
+# locators for the result page
 RESULT_PAGE_TITLE = (By.CSS_SELECTOR, '.applicationResult')
 RESULT_PAGE_FIRST_NAME_FIELD = (By.CSS_SELECTOR, '[name="firstName"]')
 RESULT_PAGE_CONTAINER = (By.CSS_SELECTOR, '.container-fluid')
@@ -41,7 +40,7 @@ RESULT_PAGE_TEXT = (By.CSS_SELECTOR, '.large.ng-binding.ng-scope')
 
 # data
 SUBMITTED_FORM_TITLE = "Submitted sample form data"
-USER_PASSWORD = 'Pass123!'
+USER_PASSWORD = valid_password_five_chars()
 project_root = Path(__file__).parent.parent.parent.parent
 image_path = project_root / "data" / "images" / "se.jpg"
 
@@ -52,24 +51,14 @@ ASTERISK_COLOR = "rgba(51, 51, 51, 1)"
 ASTERISK = "*"
 
 
-
-
 class TestSampleForm:
     man = next(person)
 
     def test_minimum_required_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
-
         page_sp.open()
-        page_sp.element_is_visible(NAME_FIELD).click()
-        page_sp.element_is_visible(FIRST_NAME_FIELD).send_keys(self.man.first_name)
-        page_sp.element_is_visible(LAST_NAME_FIELD).send_keys(self.man.last_name)
-        page_sp.element_is_visible(SAVE_BUTTON).click()
-        page_sp.element_is_visible(USER_NAME_FIELD).send_keys(self.man.first_name + self.man.last_name)
-        page_sp.element_is_visible(EMAIL_FIELD).send_keys(self.man.email)
-        page_sp.element_is_visible(PASSWORD_FIELD).send_keys(USER_PASSWORD)
-        page_sp.element_is_visible(CONFIRM_PASSWORD_FIELD).send_keys(USER_PASSWORD)
-        page_sp.element_is_visible(PRIVACY_POLICY_CHECKBOX).click()
+
+        self.all_required_fields(page_sp)
 
         page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
 
@@ -80,24 +69,17 @@ class TestSampleForm:
         assert actual_text == expected_text
         assert actual_f_name == self.man.first_name
 
-    def test_all_required_fields(self, driver):
+    def test_all_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
-
         page_sp.open()
-        page_sp.element_is_visible(NAME_FIELD).click()
-        page_sp.element_is_visible(FIRST_NAME_FIELD).send_keys(self.man.first_name)
-        page_sp.element_is_visible(LAST_NAME_FIELD).send_keys(self.man.last_name)
-        page_sp.element_is_visible(SAVE_BUTTON).click()
-        page_sp.element_is_visible(USER_NAME_FIELD).send_keys(self.man.first_name + self.man.last_name)
-        page_sp.element_is_visible(EMAIL_FIELD).send_keys(self.man.email)
-        page_sp.element_is_visible(PASSWORD_FIELD).send_keys(USER_PASSWORD)
-        page_sp.element_is_visible(CONFIRM_PASSWORD_FIELD).send_keys(USER_PASSWORD)
-        page_sp.element_is_visible(PRIVACY_POLICY_CHECKBOX).click()
+
+        self.all_required_fields(page_sp)
 
         page_sp.element_is_visible(PHONE_FIELD).send_keys(self.man.phone_number)
         page_sp.element_is_visible(DOB_FIELD).send_keys('2/23/2000')  # TODO DOB generator
         page_sp.element_is_visible(ADDRESS_FIELD).send_keys(self.man.address)
         # TODO car maker select
+
 
         page_sp.element_is_visible((By.XPATH, f"//input[@value='{self.man.gender}']")).click()
         page_sp.element_is_visible(ALLOW_TO_CONTACT_CHECK_BOX).click()
@@ -134,3 +116,14 @@ class TestSampleForm:
         pass
         # fjgkdfghdkfgh
         # kdfglsdfgjdsl
+
+    def all_required_fields(self, page_sp):
+        page_sp.element_is_visible(NAME_FIELD).click()
+        page_sp.element_is_visible(FIRST_NAME_FIELD).send_keys(self.man.first_name)
+        page_sp.element_is_visible(LAST_NAME_FIELD).send_keys(self.man.last_name)
+        page_sp.element_is_visible(SAVE_BUTTON).click()
+        page_sp.element_is_visible(USER_NAME_FIELD).send_keys(self.man.first_name + self.man.last_name)
+        page_sp.element_is_visible(EMAIL_FIELD).send_keys(self.man.email)
+        page_sp.element_is_visible(PASSWORD_FIELD).send_keys(USER_PASSWORD)
+        page_sp.element_is_visible(CONFIRM_PASSWORD_FIELD).send_keys(USER_PASSWORD)
+        page_sp.element_is_visible(PRIVACY_POLICY_CHECKBOX).click()

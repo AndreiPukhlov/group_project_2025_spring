@@ -4,10 +4,8 @@ from selenium.webdriver.common.by import By
 from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female
 from pages.sample_form_page import SampleFormPage
 
-
 person = generate_sample_person_male()
 person2 = generate_sample_person_female()
-
 
 URL = "https://skryabin.com/webdriver/html/sample.html"
 NAME_FIELD = (By.CSS_SELECTOR, '#name')
@@ -23,7 +21,7 @@ SUBMIT_BUTTON = (By.ID, 'formSubmit')
 SUBMITTED_SAMPLE_FORM_DATA = (By.CSS_SELECTOR, '.applicationResult')
 SUBMITTED_NAME = (By.CSS_SELECTOR, '[name="name"]')
 
-REQUIRED_NAME_ERROR = (By.ID,"name-error")
+REQUIRED_NAME_ERROR = (By.ID, "name-error")
 REQUIRED_FIRST_NAME_ERROR = (By.ID, "username-error")
 REQUIRED_LAST_NAME_ERROR = (By.ID, "password-error")
 REQUIRED_EMAIL_ERROR = (By.ID, "email-error")
@@ -31,7 +29,6 @@ REQUIRED_EMAIL_ERROR = (By.ID, "email-error")
 
 class TestSampleForm:
     man = next(person)
-
 
     def test_minimum_required_fields(self, driver):
         page_sp = SampleFormPage(driver, URL)
@@ -51,7 +48,6 @@ class TestSampleForm:
         expected_text = "Submitted sample form data"
         actual_f_name = page_sp.element_is_visible(SUBMITTED_NAME).text
 
-
         assert actual_text == expected_text
         assert actual_f_name == self.man.first_name + ' ' + self.man.last_name
 
@@ -67,9 +63,10 @@ class TestSampleForm:
         first_name_error = page_sp.element_is_visible(REQUIRED_FIRST_NAME_ERROR).text
         last_name_error = page_sp.element_is_visible(REQUIRED_LAST_NAME_ERROR).text
         email_error = page_sp.element_is_visible(REQUIRED_EMAIL_ERROR).text
+        error_messages = page_sp.elements_are_present(CHECKBOX_PRIVACY_POLICY)
+        assert len(error_messages) == 4
 
-        assert name_error == "This field is required.", "The error did not appear for Name"
+        assert name_error == "This field is required."
         assert first_name_error == "This field is required.", "The error did not appear for First Name"
         assert last_name_error == "This field is required.", "The error did not appear for Last Name"
         assert email_error == "This field is required.", "The error did not appear for Email"
-

@@ -24,7 +24,6 @@ CHECKBOX_POLICY = (By.CSS_SELECTOR, '[name="agreedToPrivacyPolicy"]')
 # SUBMIT_BUTTON = (By.ID, 'formSubmit')
 LOGIN_RESULT = (By.CSS_SELECTOR, '.applicationResult')
 
-
 # 2 types of locators
 NAME_FIELD = (By.CSS_SELECTOR, '[name="name"]')
 FIRST_NAME = (By.CSS_SELECTOR, '[name="firstName"]')
@@ -39,6 +38,7 @@ CONFIRM_PASSWORD_FIELD = (By.CSS_SELECTOR, '[name="confirmPassword"]')
 # CHECKBOX_POLICY = (By.CSS_SELECTOR, '[name="agreedToPrivacyPolicy"]')
 SUBMIT_BUTTON = (By.CSS_SELECTOR, '[name="formSubmit"]')
 # LOGIN_RESULT = (By.XPATH, "//legend[@class='applicationResult']")
+RESULT_PAGE_PHONE_NUMBER = (By.XPATH, "(//*[@name='phone'])[1]")
 
 
 class TestSampleForm:
@@ -64,8 +64,6 @@ class TestSampleForm:
 
         assert actual_text == expected_text
 
-
-
     def test_required_other_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
 
@@ -89,19 +87,17 @@ class TestSampleForm:
         actual_l_name = page_sp.element_is_visible(LAST_NAME).text
         actual_u_name = page_sp.element_is_visible(USER_NAME).text
         actual_email = page_sp.element_is_visible(EMAIL_FIELD).text
-        # actual_address = page_sp.element_is_visible(ADDRESS_FIELD).text
-        # actual_phone = page_sp.element_is_visible(PHONE_NUMBER).text
 
+        actual_address = page_sp.element_is_visible(ADDRESS_FIELD).text
+        actual_phone = page_sp.element_is_visible(RESULT_PAGE_PHONE_NUMBER).text
 
         assert actual_text == expected_text
         assert actual_f_name == self.man.first_name
         assert actual_l_name == self.man.last_name
         assert actual_u_name == self.man.first_name + self.man.last_name
         assert actual_email == self.man.email
-        # assert actual_address == self.man.address
-        # assert actual_phone == self.man.phone_number
-
-
+        assert actual_address == self.man.address
+        assert actual_phone == self.man.phone_number
 
     def test_name(self):
         pass
@@ -120,5 +116,3 @@ class TestSampleForm:
         #  Leave the "Email" field empty, attempt to submit, and verify the error message.
         #  Leave the "Password" or "Confirm Password" field empty, attempt to submit, and verify the error message.
         #  Submit without checking the "Agree to Terms" checkbox and verify the error message.
-
-

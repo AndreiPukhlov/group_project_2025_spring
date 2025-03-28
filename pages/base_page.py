@@ -40,8 +40,8 @@ class BasePage(object):
     def double_click(self, element):
         self.action.double_click(element).perform()
 
-    def right_click(self, element):
-        self.action.context_click(element).perform()
+    def right_click(self, locator):
+        self.action.context_click(self.element_is_visible(locator)).perform()
 
     def click_with_js(self, element):
         self.driver.execute_script("arguments[0].click();", element)
@@ -55,6 +55,7 @@ class BasePage(object):
 
     def select_by_value(self, locator, value):
         Select(self.element_is_visible(locator)).select_by_value(value)
+
 
     def get_element_by_locator(self, locator):
         return self.element_is_visible(locator)
