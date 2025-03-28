@@ -40,7 +40,7 @@ def generate_sample_person_male():
         gender='male',
         address=fake.address(),
         email=fake.email(),
-        phone_number=fake.numerify("+1-###-###-####"),
+        phone_number=fake.random_number(10),
         contact_person_name=f"{fake.first_name()} {fake.last_name()}",
         contact_person_phone_number=fake.phone_number()
     )
@@ -59,4 +59,9 @@ def random_country_generator():
     return countries[index]
 
 
+def valid_password_five_chars():
+    return fake.password(5)
 
+
+def invalid_password_four_chars():
+    return fake.password(4)
