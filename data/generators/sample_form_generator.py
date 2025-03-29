@@ -1,4 +1,5 @@
 import random
+from datetime import date
 
 from faker import Faker
 
@@ -65,3 +66,19 @@ def valid_password_five_chars():
 
 def invalid_password_four_chars():
     return fake.password(4)
+
+
+def dob_generator():
+    year = random.randint(date.today().year - 120, date.today().year - 18)
+    month = fake.month_name()
+
+    days_in_month = {
+        "January": 31, "February": 29 if (year % 400 == 0 or (year % 4 == 0 and year % 100 != 0)) else 28,
+        "March": 31, "April": 30, "May": 31, "June": 30,
+        "July": 31, "August": 31, "September": 30, "October": 31,
+        "November": 30, "December": 31
+    }
+
+    day = random.randint(1, days_in_month[month])
+    return year, month, day
+

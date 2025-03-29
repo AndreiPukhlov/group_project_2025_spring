@@ -3,7 +3,7 @@ Inlay hints -> Done
 Implicitly wait -> Done
 conftest and python.ini   -> Done
 @pytest.marks -> Done
-urls pkg, data pkg, pages pkg urls pkg
+urls pkg, data pkg, pages pkg urls pkg - done
 api - done
 
 yield - repeat - done
@@ -12,12 +12,21 @@ Base page - done
 Explicitly Wait - done
 
 
-locators pkg
-urls pkg
-data pkg
+locators pkg - done
+urls pkg - done
+data pkg - done
 
-sample form - alerts, window_handle, iFrame
-https://skryabin.com/webdriver/html/sample.html
+
+https://skryabin.com/webdriver/html/sample.html:
+generators - do
+selectors - do
+alerts -
+window_handle -
+iFrame -
+dynamic locators -
+
+
+
 Names in Python
 
 

@@ -19,12 +19,11 @@ pytest_selenium_project/
 │   ├── login_page.py
 │   ├── search_page.py
 │
-│── fixtures/                # Pytest fixtures (WebDriver setup)
-│   ├── __init__.py
+│──
 │
 │── config/                  # Configurations (URLs, browser settings)
 │
-│── functions/               # Functions/Utils
+│── utilities/               # Functions/Utils
 │
 │── reports/                 # Test reports (logs, HTML reports)
 │
