@@ -14,3 +14,5 @@ class SamplePerson:
     contact_person_name: str = None
     contact_person_phone_number: str = None
 
+
+
