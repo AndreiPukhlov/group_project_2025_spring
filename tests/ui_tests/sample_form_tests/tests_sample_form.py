@@ -1,4 +1,3 @@
-import pytest
 from selenium.webdriver.common.by import By
 from pathlib import Path
 from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female, \
@@ -79,7 +78,6 @@ class TestSampleForm:
         page_sp.element_is_visible(DOB_FIELD).send_keys('2/23/2000')  # TODO DOB generator
         page_sp.element_is_visible(ADDRESS_FIELD).send_keys(self.man.address)
         # TODO car maker select
-
 
         page_sp.element_is_visible((By.XPATH, f"//input[@value='{self.man.gender}']")).click()
         page_sp.element_is_visible(ALLOW_TO_CONTACT_CHECK_BOX).click()

@@ -56,7 +56,6 @@ class BasePage(object):
     def select_by_value(self, locator, value):
         Select(self.element_is_visible(locator)).select_by_value(value)
 
-
     def get_element_by_locator(self, locator):
         return self.element_is_visible(locator)
 

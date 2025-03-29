@@ -10,17 +10,17 @@ from utilities.decorators import time_count
 
 load_dotenv()
 
-# Database and file details
+# DB and file details
 db_name = "English"
 csv_file_name = "English_dictionary_master.csv"
 
-# Get the current script's directory (absolute path)
+# get current script's directory (absolute path)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Move up to the root directory (go up two levels)
+# up to the root directory (go up two levels)
 ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, os.pardir, os.pardir))
 
-# Database connection details
+# connection details
 DB_HOST = os.getenv('DB_HOST')
 DB_USER = os.getenv('DB_USER')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
@@ -39,7 +39,7 @@ def get_execution_time(func):
 def create_database():
     """Create the database if it does not exist."""
     try:
-        # Connect to MySQL without specifying a database
+        # connection
         connection = mysql.connector.connect(
             host=DB_HOST,
             user=DB_USER,
@@ -55,38 +55,38 @@ def create_database():
         connection.close()
 
 
-# Ensure database exists
+# DB exists?
 create_database()
 
-# Create a database connection using SQLAlchemy
+# database connection with alchemy
 engine = create_engine(f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{db_name}")
 
 
 @time_count
-def import_csv(table_name=None, chunk_size=5000):  # Table name could be added here
+def import_csv(table_name=None, chunk_size=5000):  # table name to be added here
     """Dynamically import CSV data into a MySQL table"""
     if not os.path.exists(file_path):
         print(f"File not found: {file_path}")
         return
 
-    # Read CSV
+    # read from csv file
     df = pd.read_csv(file_path)
 
-    # Check if the DataFrame is empty
+    # check data frame is empty
     if df.empty:
         print("No data found in CSV.")
         return
 
     print(f"Dataframe has {len(df)} rows.")
-    print(df.head())  # Check the first few rows of data
+    print(df.head())  # check the first few rows of data
 
-    # Use filename as table name if not provided
+    # use filename as table name
     if table_name is None:
         table_name = os.path.splitext(os.path.basename(file_path))[0]
 
     print(f"Importing {file_path} into `{table_name}`")
 
-    # Get column types and create table if not exists
+    # get column types and create table
     metadata = MetaData()
     metadata.reflect(bind=engine)
 
@@ -94,14 +94,14 @@ def import_csv(table_name=None, chunk_size=5000):  # Table name could be added h
         df.head(0).to_sql(table_name, engine, if_exists="fail", index=False)
         print(f"Table `{table_name}` created.")
 
-    # Insert data in chunks - for big files
+    # insert data in chunks
     try:
         print(f"Inserting data into `{table_name}`...")
         df.to_sql(table_name, engine, if_exists="append", index=False, chunksize=chunk_size, method="multi")
         print(f"Data successfully inserted into `{table_name}`.")
     except OperationalError as e:
         print(f"Error inserting data: {e}")
-        print(df.head())  # Print the first few rows of the DataFrame to inspect what's being inserted
+        print(df.head())  # Print the first few rows
 
 
 import_csv()
