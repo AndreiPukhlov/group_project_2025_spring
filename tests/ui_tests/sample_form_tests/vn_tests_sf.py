@@ -104,6 +104,7 @@ class TestSampleForm:
         assert cleaned_address == self.man.address.replace("\n", " ")
         assert actual_phone == self.man.phone_number
 
+
     def test_all_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
