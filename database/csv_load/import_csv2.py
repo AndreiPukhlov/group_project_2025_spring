@@ -11,8 +11,8 @@ from utilities.decorators import time_count
 load_dotenv()
 
 # DB and file details
-db_name = "English"
-csv_file_name = "English_dictionary_master.csv"
+db_name = "jeopardy"
+csv_file_name = "JEOPARDY_CSV.csv"
 
 # get current script's directory (absolute path)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -26,14 +26,6 @@ DB_USER = os.getenv('DB_USER')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
 
 file_path = os.path.join(ROOT_DIR, 'data', 'csv_files', csv_file_name)
-
-
-def get_execution_time(func):
-    start_time = time.time()
-    func()
-    end_time = time.time()
-    importing_time = (end_time - start_time) / 60
-    print(f"It took {importing_time} minutes to import this csv file")
 
 
 def create_database():
@@ -71,6 +63,7 @@ def import_csv(table_name=None, chunk_size=5000):  # table name to be added here
 
     # read from csv file
     df = pd.read_csv(file_path)
+    df.rename(columns=lambda x: x.strip(), inplace=True)
 
     # check data frame is empty
     if df.empty:
