@@ -1,106 +1,282 @@
 import pytest
 from selenium.webdriver.common.by import By
 
-from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female
+from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female, \
+    random_country_generator
 from pages.sample_form_page import SampleFormPage
+from tests.ui_tests.sample_form_tests.tests_sample_form import image_path
 
 person = generate_sample_person_male()
 person2 = generate_sample_person_female()
 
 url = "https://skryabin.com/webdriver/html/sample.html"
 
-# 1 types of locators
-# NAME_FIELD = (By.CSS_SELECTOR, '#name')
-# FIRST_NAME = (By.ID, 'firstName')
-# LAST_NAME = (By.ID, 'lastName')
-# SAVE_BUTTON = (By.XPATH, "//*[text()='Save']")
-# ADDRESS_FIELD = (By.ID, 'address')
-USER_NAME = (By.CSS_SELECTOR, '[name="username"]')
-EMAIL_FIELD = (By.CSS_SELECTOR, "[name='email']")
-# PASSWORD_FIELD = (By.ID, "password")
-# CONFIRM_PASSWORD_FIELD = (By.ID, "confirmPassword")
-PHONE_NUMBER = (By.CSS_SELECTOR, '[name="phone"]')
-CHECKBOX_POLICY = (By.CSS_SELECTOR, '[name="agreedToPrivacyPolicy"]')
-# SUBMIT_BUTTON = (By.ID, 'formSubmit')
-LOGIN_RESULT = (By.CSS_SELECTOR, '.applicationResult')
-
-# 2 types of locators
+#locators for the sample form
 NAME_FIELD = (By.CSS_SELECTOR, '[name="name"]')
 FIRST_NAME = (By.CSS_SELECTOR, '[name="firstName"]')
 LAST_NAME = (By.CSS_SELECTOR, '[name="lastName"]')
 SAVE_BUTTON = (By.XPATH, "//span[contains(text(), 'Save')]")
 ADDRESS_FIELD = (By.CSS_SELECTOR, '[name="address"]')
-# USER_NAME = (By.CSS_SELECTOR, '[name="username"]')
-# EMAIL_FIELD = (By.CSS_SELECTOR, '[name="email"]')
+USER_NAME = (By.CSS_SELECTOR, '[name="username"]')
+EMAIL_FIELD = (By.CSS_SELECTOR, "[name='email']")
 PASSWORD_FIELD = (By.CSS_SELECTOR, '[name="password"]')
 CONFIRM_PASSWORD_FIELD = (By.CSS_SELECTOR, '[name="confirmPassword"]')
-# PHONE_NUMBER = (By.CSS_SELECTOR, '[name="phone"]')
-# CHECKBOX_POLICY = (By.CSS_SELECTOR, '[name="agreedToPrivacyPolicy"]')
-SUBMIT_BUTTON = (By.CSS_SELECTOR, '[name="formSubmit"]')
-# LOGIN_RESULT = (By.XPATH, "//legend[@class='applicationResult']")
+PHONE_FIELD = (By.CSS_SELECTOR, '[name="phone"]')
+CHECKBOX_POLICY = (By.CSS_SELECTOR, '[name="agreedToPrivacyPolicy"]')
+FORM_SUBMIT_BUTTON = (By.CSS_SELECTOR, '[name="formSubmit"]')
+
+DOB_FIELD = (By.ID, 'dateOfBirth')
+
+NAME_FIELD_SAVE = (By.CSS_SELECTOR, '[value=""]' )
+ALLOW_TO_CONTACT_CHECK_BOX = (By.CSS_SELECTOR, "[name='allowedToContact']")
+SELECT_COUNTRY = (By.CSS_SELECTOR, '[name="countryOfOrigin"]')
+THIRD_PARTY_AGREEMENT_BUTTON = (By.ID, 'thirdPartyButton')
+ADDITIONAL_INFO_IFRAME = (By.CSS_SELECTOR, '[name="additionalInfo"]')
+CONTACT_PERSON_NAME_IFRAME = (By.ID, 'contactPersonName')
+CONTACT_PERSON_PHONE_IFRAME = (By.ID, 'contactPersonPhone')
+
+CHOOSE_FILE_BUTTON = (By.ID, 'attachment')
+
+#locators for the result page
+LOGIN_RESULT = (By.XPATH, "//legend[@class='applicationResult']")
 RESULT_PAGE_PHONE_NUMBER = (By.XPATH, "(//*[@name='phone'])[1]")
 
+#data
+USER_PASSWORD = 'Pass123!'
+SUBMITTED_FORM_TITLE = "Submitted sample form data"
+
+# locators for the result page
+RESULT_PAGE_TITLE = (By.CSS_SELECTOR, '.applicationResult')
+RESULT_PAGE_FIRST_NAME_FIELD = (By.CSS_SELECTOR, '[name="firstName"]')
+RESULT_PAGE_CONTAINER = (By.CSS_SELECTOR, '.container-fluid')
+RESULT_PAGE_TEXT = (By.CSS_SELECTOR, '.large.ng-binding.ng-scope')
+
+
+# assertion data locators
+ASSERT_THIRD_PARTY_AGREEMENT_TEXT = (By.ID, 'thirdPartyResponseMessage')
+USER_NAME_LABEL = (By.XPATH, '//label[@for="username"]')
+ASTERISK_COLOR = "rgba(51, 51, 51, 1)"
+ASTERISK = "*"
 
 class TestSampleForm:
     man = next(person)
 
     def test_minimum_required_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
-
         page_sp.open()
-        page_sp.element_is_visible(NAME_FIELD).click()
-        page_sp.element_is_visible(FIRST_NAME).send_keys(self.man.first_name)
-        page_sp.element_is_visible(LAST_NAME).send_keys(self.man.last_name)
-        page_sp.element_is_visible(SAVE_BUTTON).click()
-        page_sp.element_is_visible(USER_NAME).send_keys(self.man.first_name + self.man.last_name)
-        page_sp.element_is_visible(EMAIL_FIELD).send_keys(self.man.email)
-        page_sp.element_is_visible(PASSWORD_FIELD).send_keys('Pass123!')
-        page_sp.element_is_visible(CONFIRM_PASSWORD_FIELD).send_keys('Pass123!')
-        page_sp.element_is_visible(CHECKBOX_POLICY).click()
-        page_sp.element_is_visible(SUBMIT_BUTTON).click()
+
+        self.all_required_fields(page_sp)
+
+        page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
 
         actual_text = page_sp.element_is_visible(LOGIN_RESULT).text
-        expected_text = "Submitted sample form data"
+        expected_text = SUBMITTED_FORM_TITLE
 
         assert actual_text == expected_text
+
 
     def test_required_other_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
-
         page_sp.open()
+
+        self.all_required_fields(page_sp)
+
+        page_sp.element_is_visible(ADDRESS_FIELD).send_keys(self.man.address)
+        page_sp.element_is_visible(PHONE_FIELD).send_keys(self.man.phone_number)
+
+        page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
+
+        actual_text = page_sp.element_is_visible(LOGIN_RESULT).text
+        expected_text = SUBMITTED_FORM_TITLE
+        actual_first_name = page_sp.element_is_visible(FIRST_NAME).text
+        actual_last_name = page_sp.element_is_visible(LAST_NAME).text
+        actual_user_name = page_sp.element_is_visible(USER_NAME).text
+        actual_email = page_sp.element_is_visible(EMAIL_FIELD).text
+        actual_address = page_sp.element_is_visible(ADDRESS_FIELD).text
+        cleaned_address = actual_address.replace("\n", " ")
+        actual_phone = int(page_sp.element_is_visible(RESULT_PAGE_PHONE_NUMBER).text)
+
+        assert actual_text == expected_text
+        assert actual_first_name == self.man.first_name
+        assert actual_last_name == self.man.last_name
+        assert actual_user_name == self.man.first_name + self.man.last_name
+        assert actual_email == self.man.email
+        assert cleaned_address == self.man.address.replace("\n", " ")
+        assert actual_phone == self.man.phone_number
+
+    def test_all_fields(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+
+        self.all_required_fields(page_sp)
+
+        page_sp.element_is_visible(PHONE_FIELD).send_keys(self.man.phone_number)
+        page_sp.element_is_visible(DOB_FIELD).send_keys('2/23/2000')  # TODO DOB generator
+        page_sp.element_is_visible(ADDRESS_FIELD).send_keys(self.man.address)
+        # TODO car maker select
+
+        page_sp.element_is_visible((By.XPATH, f"//input[@value='{self.man.gender}']")).click()
+        page_sp.element_is_visible(ALLOW_TO_CONTACT_CHECK_BOX).click()
+        page_sp.select_by_text(SELECT_COUNTRY, random_country_generator())
+        page_sp.element_is_visible(THIRD_PARTY_AGREEMENT_BUTTON).click()
+
+        alert_text = page_sp.get_alert_text()
+        print(alert_text)
+        page_sp.alert_accept()
+        page_sp.element_is_visible(CHOOSE_FILE_BUTTON).send_keys(str(image_path))
+
+        iframe_element = page_sp.element_is_visible(ADDITIONAL_INFO_IFRAME)
+        page_sp.switch_to_iframe(iframe_element)
+        page_sp.element_is_visible(CONTACT_PERSON_NAME_IFRAME).send_keys(self.man.contact_person_name)
+        page_sp.element_is_visible(CONTACT_PERSON_NAME_IFRAME).send_keys(self.man.contact_person_phone_number)
+        page_sp.switch_out_of_iframe()
+
+        page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
+        elements = page_sp.elements_are_present(RESULT_PAGE_TEXT)
+        text_list = [i.text for i in elements]
+        alert_text = page_sp.element_is_visible(RESULT_PAGE_CONTAINER).text
+        print(text_list)
+        print(type(alert_text))
+        print(alert_text)
+        # TODO assertions
+        asterisk_color = page_sp.get_element_color(USER_NAME_LABEL)
+        asterisk_content = page_sp.get_element_after(USER_NAME_LABEL)
+        print(asterisk_color)
+        print(asterisk_content)
+
+
+    def all_required_fields(self, page_sp):
         page_sp.element_is_visible(NAME_FIELD).click()
         page_sp.element_is_visible(FIRST_NAME).send_keys(self.man.first_name)
         page_sp.element_is_visible(LAST_NAME).send_keys(self.man.last_name)
         page_sp.element_is_visible(SAVE_BUTTON).click()
-        page_sp.element_is_visible(ADDRESS_FIELD).send_keys(self.man.address)
         page_sp.element_is_visible(USER_NAME).send_keys(self.man.first_name + self.man.last_name)
         page_sp.element_is_visible(EMAIL_FIELD).send_keys(self.man.email)
-        page_sp.element_is_visible(PASSWORD_FIELD).send_keys('Pass123!')
-        page_sp.element_is_visible(CONFIRM_PASSWORD_FIELD).send_keys('Pass123!')
-        page_sp.element_is_visible(PHONE_NUMBER).send_keys(self.man.phone_number)
+        page_sp.element_is_visible(PASSWORD_FIELD).send_keys(USER_PASSWORD)
+        page_sp.element_is_visible(CONFIRM_PASSWORD_FIELD).send_keys(USER_PASSWORD)
         page_sp.element_is_visible(CHECKBOX_POLICY).click()
-        page_sp.element_is_visible(SUBMIT_BUTTON).click()
 
-        actual_text = page_sp.element_is_visible(LOGIN_RESULT).text
-        expected_text = "Submitted sample form data"
-        actual_f_name = page_sp.element_is_visible(FIRST_NAME).text
-        actual_l_name = page_sp.element_is_visible(LAST_NAME).text
-        actual_u_name = page_sp.element_is_visible(USER_NAME).text
-        actual_email = page_sp.element_is_visible(EMAIL_FIELD).text
 
-        actual_address = page_sp.element_is_visible(ADDRESS_FIELD).text
-        actual_phone = page_sp.element_is_visible(RESULT_PAGE_PHONE_NUMBER).text
+    # verify name_field with valid data
+    def test_name_field_valid_fist_last_name(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
 
-        assert actual_text == expected_text
-        assert actual_f_name == self.man.first_name
-        assert actual_l_name == self.man.last_name
-        assert actual_u_name == self.man.first_name + self.man.last_name
-        assert actual_email == self.man.email
-        assert actual_address == self.man.address
-        assert actual_phone == self.man.phone_number
+        page_sp.element_is_visible(NAME_FIELD).click()
+        page_sp.element_is_visible(FIRST_NAME).send_keys(self.man.first_name)
+        page_sp.element_is_visible(LAST_NAME).send_keys(self.man.last_name)
+        page_sp.element_is_visible(SAVE_BUTTON).click()
 
-    def test_name(self):
+        # actual_name = page_sp.element_is_visible(NAME_FIELD_SAVE).text
+        # assert actual_name == self.man.first_name + self.man.last_name
+
+    # Verify form submission with missing required fields
+    def test_empty_required_fields(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+        # Do not input data to the required fields - name, username, email, password, confirm password,
+        # Must check Privacy Police
+        # Click Submit button
+        # Expected result - The message "This field is required" under any required fields appears
         pass
+
+
+    #Verify Gender radio buttons
+    #Precondition - the required fields are filled in
+    def test_gender_radio_buttons(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+        # Click Male or Female radio button and click Submit
+        # Expected result - The gender is on the Submitted sample form data
+
+        pass
+
+    #Verify Country of Origin selection from dropdown
+    # Precondition - the required fields are filled in
+    def test_country_of_origin_dropdown(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+        # Click on dropdown - Please select
+        # Select country and click Submit
+        # Expected result - Correct Country of Origin is on the Submitted sample form data???
+        pass
+
+
+    #Verify date of birth field
+    # Precondition - the required fields are filled in
+    def test_date_of_birth_input(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+        # Input date with month/date/year
+        # Click Submit
+        # Expected result - Correct date Of Birth is on the Submitted sample form data???
+        pass
+
+    # Verify date of birth field
+    # Precondition - the required fields are filled in
+    def test_date_of_birth_select(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+        # Select month/date/year
+        # Click Submit
+        # Expected result - Correct date Of Birth is on the Submitted sample form data???
+        pass
+
+    #Verify Reset form functionality
+    # Precondition - some of the fields are filled in
+    def test_reset_button(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+        # Click Reset button
+        # Expected result - All fields should be cleared in default state
+        pass
+
+    # Verify Reset form functionality
+    # Precondition - some of the fields are filled in
+    def test_refresh_button(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+        # Click Refresh button
+        # Expected result - All fields should be reloaded to reflect updates
+        pass
+
+    # verify first_name_field  with invalid data
+    def test_name_field_invalid_first_name(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+        # Input first_name more than maxlength > 100 characters
+        # Expected result: message - Please enter no more than 100 characters.
+        pass
+
+    # verify last_name_field with invalid data
+    def test_name_field_invalid_last_name(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+        # Input last_name more than maxlength > 100 characters
+        # Expected result: message - Please enter no more than 100 characters.
+        pass
+
+    # Verify username_field with more than 40 characters
+    def test_invalid_username_field(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+        # Input name more than maxlength > 40 characters
+        # Expected result: cannot possible to input more than 40.
+        pass
+
+    # Verify password_field more than 40 characters
+    def test_invalid_password(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+        # Input name more than maxlength > 40 characters
+        # Expected result: cannot possible to input more than 40.
+        pass
+
+
+
+
+
+
         #  Check lists:
         #  Enter valid data in all required fields
         #  Select a country
