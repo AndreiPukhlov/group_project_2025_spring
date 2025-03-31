@@ -68,6 +68,21 @@ def invalid_password_four_chars():
     return fake.password(4)
 
 
+def dob_generator_select():
+    year = (random.randint(date.today().year - 100, date.today().year - 18))
+    month = random.randint(0, 11)
+
+    days_in_month = {
+        0: 31, 1: 29 if (year % 400 == 0 or (year % 4 == 0 and year % 100 != 0)) else 28,
+        2: 31, 3: 30, 4: 31, 5: 30,
+        6: 31, 7: 31, 8: 30, 9: 31,
+        10: 30, 11: 31
+    }
+
+    day = random.randint(1, days_in_month[month])
+    return str(year), str(month), day
+
+
 def dob_generator():
     year = random.randint(date.today().year - 120, date.today().year - 18)
     month = fake.month_name()
@@ -81,4 +96,5 @@ def dob_generator():
 
     day = random.randint(1, days_in_month[month])
     return year, month, day
+
 
