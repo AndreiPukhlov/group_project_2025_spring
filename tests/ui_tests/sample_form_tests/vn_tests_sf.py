@@ -35,6 +35,8 @@ ADDITIONAL_INFO_IFRAME = (By.CSS_SELECTOR, '[name="additionalInfo"]')
 CONTACT_PERSON_NAME_IFRAME = (By.ID, 'contactPersonName')
 CONTACT_PERSON_PHONE_IFRAME = (By.ID, 'contactPersonPhone')
 
+SELECT_CAR = (By.CSS_SELECTOR, '[name="carMake"]')
+
 CHOOSE_FILE_BUTTON = (By.ID, 'attachment')
 
 #locators for the result page
@@ -58,8 +60,23 @@ USER_NAME_LABEL = (By.XPATH, '//label[@for="username"]')
 ASTERISK_COLOR = "rgba(51, 51, 51, 1)"
 ASTERISK = "*"
 
+import random
+
+cars = [
+    "Ford",
+    "Toyota",
+    "BMW",
+    "Other"
+]
+
+def random_car_generator():
+    index = random.randint(0, len(cars) - 1)
+    return cars[index]
+
+
 class TestSampleForm:
     man = next(person)
+    car = random_car_generator()
 
     def test_minimum_required_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
@@ -103,7 +120,6 @@ class TestSampleForm:
         assert actual_email == self.man.email
         assert cleaned_address == self.man.address.replace("\n", " ")
         assert actual_phone == self.man.phone_number
-
 
     def test_all_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
@@ -158,7 +174,32 @@ class TestSampleForm:
         page_sp.element_is_visible(CHECKBOX_POLICY).click()
 
 
-    # verify name_field with valid data
+    def test_car_make(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+
+        self.all_required_fields(page_sp)
+
+        page_sp.select_by_value(SELECT_CAR, random_car_generator())
+        page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
+
+        actual_text = page_sp.element_is_visible(LOGIN_RESULT).text
+        expected_text = SUBMITTED_FORM_TITLE
+        actual_car = page_sp.element_is_visible(SELECT_CAR).text
+
+        assert actual_text == expected_text
+        assert actual_car == actual_car
+        elements = page_sp.elements_are_present(RESULT_PAGE_TEXT)
+        text_list = [i.text for i in elements]
+        alert_text = page_sp.element_is_visible(RESULT_PAGE_CONTAINER).text
+        print(text_list)
+        print(type(alert_text))
+        print(alert_text)
+
+
+
+
+    #verify name_field with valid data
     def test_name_field_valid_fist_last_name(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
@@ -189,7 +230,6 @@ class TestSampleForm:
         page_sp.open()
         # Click Male or Female radio button and click Submit
         # Expected result - The gender is on the Submitted sample form data
-
         pass
 
     #Verify Country of Origin selection from dropdown
@@ -275,9 +315,6 @@ class TestSampleForm:
 
 
 
-
-
-
         #  Check lists:
         #  Enter valid data in all required fields
         #  Select a country
@@ -293,3 +330,4 @@ class TestSampleForm:
         #  Leave the "Email" field empty, attempt to submit, and verify the error message.
         #  Leave the "Password" or "Confirm Password" field empty, attempt to submit, and verify the error message.
         #  Submit without checking the "Agree to Terms" checkbox and verify the error message.
+
