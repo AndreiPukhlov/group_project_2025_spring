@@ -82,8 +82,9 @@ class BasePage(object):
     def alert_dismiss(self):
         self.alert().dismiss()
 
-    def switch_to_iframe(self, element):
-        self.driver.switch_to.frame(element)
+    def switch_to_iframe(self, locator):
+        iframe = self.element_is_visible(locator)
+        self.driver.switch_to.frame(iframe)
 
     def switch_out_of_iframe(self):
         self.driver.switch_to.default_content()

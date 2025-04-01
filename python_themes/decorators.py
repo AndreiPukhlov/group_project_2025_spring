@@ -3,9 +3,9 @@ import time
 
 
 def timer(func):
-    def wrapper():
+    def wrapper(*args, **kwargs):
         start = time.time()
-        func()
+        func(*args, **kwargs)
         end = time.time()
         result = end - start
         if result < 60:
@@ -24,10 +24,10 @@ def timer(func):
 
 
 def fancy_decorator(func):
-    def wrapper():
+    def wrapper(*args, **kwargs):
         print("✨ Салат ✨")
         print("✨" * 8)
-        func()
+        func(*args, **kwargs)
         print("✨" * 8)
         print("✨ Одна порция ✨")
 
@@ -41,6 +41,7 @@ def seld_pod_shuboy():
 def olivie():
     print("Оливье!")
 
+
 @fancy_decorator
 def mimoza():
     print('Мимоза')
@@ -48,6 +49,15 @@ def mimoza():
 
 def vesenniy():
     print("Весенний!")
+
+@fancy_decorator
+def salat(name):
+    print(name)
+
+
+def input_():
+    name = input("enter name: ")
+    salat(name)
 
 
 #
@@ -57,9 +67,11 @@ def vesenniy():
 # olivie()
 # print()
 # vesenniy()
+
+
 # print()
 mimoza()
-
+# input_()
 
 def sleeeeep():
     time.sleep(1)
