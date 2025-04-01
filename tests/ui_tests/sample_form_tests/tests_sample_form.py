@@ -108,12 +108,17 @@ class TestSampleForm:
         print(type(alert_text))
         print(alert_text)
 
-        # TODO assertions
-        corrected_month = str(int(self.month) + 1) # TODO zfill()
-        month = '0' + corrected_month if len(str(int(self.month) + 1)) < 2 else corrected_month
-        day = self.day if len(str(self.day)) > 1 else int('0' + str(self.day))
-        expected_dob = f"{month}/{day}/{self.year}"
+        # option #1
+        # corrected_month = str(int(self.month) + 1) #
+        # month = '0' + corrected_month if len(str(int(self.month) + 1)) < 2 else corrected_month
+        # day = self.day if len(str(self.day)) > 1 else int('0' + str(self.day))
+        # expected_dob = f"{month}/{day}/{self.year}"
 
+        # option #2 with zfill()
+        corrected_month = str(int(self.month) + 1)  # adds + 1 to the index of month , 0 + 1 = 1 (Jan), etc.
+        expected_dob = f"{corrected_month.zfill(2)}/{str(self.day).zfill(2)}/{self.year}"  #  zfill() adds 0 to the string of month and day if length of the string < 2
+
+        # TODO assertions
         print(expected_dob)
         asterisk_color = page_sp.get_element_color(USER_NAME_LABEL)
         asterisk_content = page_sp.get_element_after(USER_NAME_LABEL)
