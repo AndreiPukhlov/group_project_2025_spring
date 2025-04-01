@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from pathlib import Path
 from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female, \
-    random_country_generator, valid_password_five_chars
+    random_country_generator, valid_password_five_chars, dob_generator_select
 from pages.sample_form_page import SampleFormPage
 
 person = generate_sample_person_male()
@@ -52,6 +52,7 @@ ASTERISK = "*"
 
 class TestSampleForm:
     man = next(person)
+    year, month, day = dob_generator_select()
 
     def test_minimum_required_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
@@ -63,10 +64,10 @@ class TestSampleForm:
 
         actual_text = page_sp.element_is_visible(RESULT_PAGE_TITLE).text
         expected_text = SUBMITTED_FORM_TITLE
-        actual_f_name = page_sp.element_is_visible(RESULT_PAGE_FIRST_NAME_FIELD).text
+        actual_first_name = page_sp.element_is_visible(RESULT_PAGE_FIRST_NAME_FIELD).text
 
         assert actual_text == expected_text
-        assert actual_f_name == self.man.first_name
+        assert actual_first_name == self.man.first_name
 
     def test_all_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
@@ -75,7 +76,12 @@ class TestSampleForm:
         self.all_required_fields(page_sp)
 
         page_sp.element_is_visible(PHONE_FIELD).send_keys(self.man.phone_number)
-        page_sp.element_is_visible(DOB_FIELD).send_keys('2/23/2000')  # TODO DOB generator
+
+        page_sp.element_is_visible(DOB_FIELD).click()
+        page_sp.select_by_text((By.CSS_SELECTOR, '[data-handler="selectYear"]'), self.year)
+        page_sp.select_by_value((By.CSS_SELECTOR, '[data-handler="selectMonth"]'), self.month)
+        page_sp.element_is_visible((By.XPATH, f"//a[text()='{self.day}']")).click()
+
         page_sp.element_is_visible(ADDRESS_FIELD).send_keys(self.man.address)
         # TODO car maker select
 
@@ -89,10 +95,9 @@ class TestSampleForm:
         page_sp.alert_accept()
         page_sp.element_is_visible(CHOOSE_FILE_BUTTON).send_keys(str(image_path))
 
-        iframe_element = page_sp.element_is_visible(ADDITIONAL_INFO_IFRAME)
-        page_sp.switch_to_iframe(iframe_element)
+        page_sp.switch_to_iframe(ADDITIONAL_INFO_IFRAME)
         page_sp.element_is_visible(CONTACT_PERSON_NAME_IFRAME).send_keys(self.man.contact_person_name)
-        page_sp.element_is_visible(CONTACT_PERSON_NAME_IFRAME).send_keys(self.man.contact_person_phone_number)
+        page_sp.element_is_visible(CONTACT_PERSON_PHONE_IFRAME).send_keys(self.man.contact_person_phone_number)
         page_sp.switch_out_of_iframe()
 
         page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
@@ -102,7 +107,14 @@ class TestSampleForm:
         print(text_list)
         print(type(alert_text))
         print(alert_text)
+
         # TODO assertions
+        corrected_month = str(int(self.month) + 1) # TODO zfill()
+        month = '0' + corrected_month if len(str(int(self.month) + 1)) < 2 else corrected_month
+        day = self.day if len(str(self.day)) > 1 else int('0' + str(self.day))
+        expected_dob = f"{month}/{day}/{self.year}"
+
+        print(expected_dob)
         asterisk_color = page_sp.get_element_color(USER_NAME_LABEL)
         asterisk_content = page_sp.get_element_after(USER_NAME_LABEL)
         print(asterisk_color)

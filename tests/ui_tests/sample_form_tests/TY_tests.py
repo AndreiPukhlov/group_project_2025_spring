@@ -34,7 +34,7 @@ CHECKBOX_ERROR_LOCATOR = (By.XPATH, '//label[contains(text(), "Must check")]')
 #data
 SUBMITTED_FORM_TEXT = "Submitted sample form data"
 EMPTY_FIELDS_ERROR_MESSAGE = "This field is required."
-CHECKBOX_ERROR_MESSAGE = " - Must check! "
+CHECKBOX_ERROR_MESSAGE = "- Must check!"
 USER_PASSWORD_GENERATOR = valid_password_five_chars()
 
 
@@ -88,10 +88,8 @@ class TestSampleForm:
 
         privacy_checkbox = page_sp.element_is_visible(PRIVACY_POLICY_CHECKBOX)
         assert not privacy_checkbox.is_selected()
-        #assert privacy_checkbox and not privacy_checkbox.is_selected()
 
         page_sp.element_is_visible(SUBMIT_BUTTON).click()
-
         actual_text = page_sp.element_is_visible(CHECKBOX_ERROR_LOCATOR).text
-        assert actual_text.strip() == CHECKBOX_ERROR_MESSAGE.strip()
+        assert actual_text == CHECKBOX_ERROR_MESSAGE
 

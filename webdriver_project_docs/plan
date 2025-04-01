@@ -24,7 +24,7 @@ alerts -
 window_handle -
 iFrame -
 dynamic locators -
-
+decorators - *args and **kwargs
 
 
 Names in Python
