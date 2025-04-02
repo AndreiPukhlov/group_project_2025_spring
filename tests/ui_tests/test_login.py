@@ -1,3 +1,5 @@
+import time
+
 import pytest
 
 from data.admin_test_data import TestData
@@ -64,9 +66,10 @@ class TestLogin:
         page.element_is_visible(locators.LOGIN_BUTTON_LOCATOR).click()
 
         assert driver.current_url == url.LOGIN_URL
-        error_messages = driver.find_elements(locators.REQUIRED_ERROR_MESSAGE_LOCATOR)
-        assert (error_messages[0].text == data.REQUIRED_FIELD_ERROR_MESSAGE
-                and error_messages[1].text == data.REQUIRED_FIELD_ERROR_MESSAGE)
+        error_messages = page.elements_are_visible(locators.REQUIRED_ERROR_MESSAGE_LOCATOR)
+        # error_messages = driver.find_elements(locators.REQUIRED_ERROR_MESSAGE_LOCATOR)
+        assert (error_messages[0].text == data.REQUIRED_FIELD_ERROR_MESSAGE and
+                error_messages[1].text == data.REQUIRED_FIELD_ERROR_MESSAGE)
 
     @pytest.mark.skip(reason="This feature is not ready yet")
     def test_password_bullet_points(self, driver):

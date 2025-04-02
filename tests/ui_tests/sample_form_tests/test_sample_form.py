@@ -1,3 +1,4 @@
+import logging
 from selenium.webdriver.common.by import By
 from pathlib import Path
 from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female, \
@@ -49,6 +50,8 @@ USER_NAME_LABEL = (By.XPATH, '//label[@for="username"]')
 ASTERISK_COLOR = "rgba(51, 51, 51, 1)"
 ASTERISK = "*"
 
+logger = logging.getLogger(__name__)
+
 
 class TestSampleForm:
     man = next(person)
@@ -57,22 +60,29 @@ class TestSampleForm:
     def test_minimum_required_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
+        logger.info("Opened sample form page")
 
         self.all_required_fields(page_sp)
+        logger.info("Populate all the required fields")
 
         page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
+        logger.info("Click 'Submit' button")
 
         actual_text = page_sp.element_is_visible(RESULT_PAGE_TITLE).text
+        logger.info("Get all data from the submitted form")
         expected_text = SUBMITTED_FORM_TITLE
         actual_first_name = page_sp.element_is_visible(RESULT_PAGE_FIRST_NAME_FIELD).text
+        logger.info("Get first_name from the submitted form")
 
         assert actual_text == expected_text
-        assert actual_first_name == self.man.first_name
+        logger.info("Result page data and expected data are equal as expected, test passed ✅")
+        assert actual_first_name == "11111"   # self.man.first_name
+        logger.info("Result page actual first_name and expected first_name are equal as expected, test passed ✅")
 
     def test_all_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
-
+        logger.info("Opened sample form page")
         self.all_required_fields(page_sp)
 
         page_sp.element_is_visible(PHONE_FIELD).send_keys(self.man.phone_number)
@@ -127,6 +137,12 @@ class TestSampleForm:
         print(asterisk_color)
         print(asterisk_content)
 
+    def test_name(self):
+        project_root = Path(__file__).parent.parent.parent.parent
+        print(f"Resolved image path: {project_root}")
+        pass
+        # fjgkdfghdkfgh
+        # kdfglsdfgjdsl
 
     def all_required_fields(self, page_sp):
         page_sp.element_is_visible(NAME_FIELD).click()

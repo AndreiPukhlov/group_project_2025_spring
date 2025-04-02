@@ -1,0 +1,18 @@
+Fixture Scopes in Pytest
+
+Scope	When is it created?	When is it destroyed?
+function |  (default)	Before each test function	|  After each test function
+class    |  Before the first test in a class	    |  After the last test in the class
+module	 |  Before the first test in a module	    |  After the last test in the module
+session	 |  Once before all tests	                |  After all tests finish
+
+
+When to Use Different Scopes
+
+function (default) ->  Use when each test needs a fresh instance (e.g., browser session).
+
+class        ->        If all tests in a class share a single resource.
+
+module       ->        If a fixture should last for an entire test file.
+
+session      ->        If the fixture should be initialized only once across the entire test run (e.g., logging setup).
