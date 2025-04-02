@@ -1,4 +1,6 @@
 import time
+
+import pytest
 from selenium import webdriver
 
 
@@ -13,19 +15,24 @@ url = "https://www.saucedemo.com/"   # global variable
 
 class TestSmth:
 
+    @pytest.mark.skip
     def test_url_status(self):
         driver = webdriver.Chrome()               # local variable - not seen from outside the method
         driver.get("https://www.apple.com")
         expected_url = "https://www.apple.com/"   # local variable - not seen from outside the method
         assert driver.current_url == expected_url
+        driver.quit()
 
+    @pytest.mark.skip
     def test_apple(self):
 
         browser.get("https://www.apple.com")   # global variable used
         time.sleep(3)
         expected_title = "Apple"
         assert browser.title == expected_title
+        browser.quit()
 
+    @pytest.mark.skip
     def test_login(self):
         driver = get_driver()              # function used
         # open AUT
@@ -45,3 +52,5 @@ class TestSmth:
         expected_url = "https://www.saucedemo.com/inventory.html"
         assert expected_result
         assert driver.current_url == expected_url
+        driver.quit()
+

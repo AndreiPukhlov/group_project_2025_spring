@@ -2,6 +2,7 @@
 *.log
 *.iml
 *.xml
+report.html
 
 
 # Ignore the venv (virtual environment) folder
