@@ -11,7 +11,7 @@ person2 = generate_sample_person_female()
 
 url = "https://skryabin.com/webdriver/html/sample.html"
 
-#locators for the sample form
+# locators for the sample form
 NAME_FIELD = (By.CSS_SELECTOR, '[name="name"]')
 FIRST_NAME = (By.CSS_SELECTOR, '[name="firstName"]')
 LAST_NAME = (By.CSS_SELECTOR, '[name="lastName"]')
@@ -27,7 +27,7 @@ FORM_SUBMIT_BUTTON = (By.CSS_SELECTOR, '[name="formSubmit"]')
 
 DOB_FIELD = (By.ID, 'dateOfBirth')
 
-NAME_FIELD_SAVE = (By.CSS_SELECTOR, '[value=""]' )
+NAME_FIELD_SAVE = (By.CSS_SELECTOR, '[value=""]')
 ALLOW_TO_CONTACT_CHECK_BOX = (By.CSS_SELECTOR, "[name='allowedToContact']")
 SELECT_COUNTRY = (By.CSS_SELECTOR, '[name="countryOfOrigin"]')
 THIRD_PARTY_AGREEMENT_BUTTON = (By.ID, 'thirdPartyButton')
@@ -39,11 +39,11 @@ SELECT_CAR = (By.CSS_SELECTOR, '[name="carMake"]')
 
 CHOOSE_FILE_BUTTON = (By.ID, 'attachment')
 
-#locators for the result page
+# locators for the result page
 LOGIN_RESULT = (By.XPATH, "//legend[@class='applicationResult']")
 RESULT_PAGE_PHONE_NUMBER = (By.XPATH, "(//*[@name='phone'])[1]")
 
-#data
+# data
 USER_PASSWORD = 'Pass123!'
 SUBMITTED_FORM_TITLE = "Submitted sample form data"
 
@@ -52,7 +52,6 @@ RESULT_PAGE_TITLE = (By.CSS_SELECTOR, '.applicationResult')
 RESULT_PAGE_FIRST_NAME_FIELD = (By.CSS_SELECTOR, '[name="firstName"]')
 RESULT_PAGE_CONTAINER = (By.CSS_SELECTOR, '.container-fluid')
 RESULT_PAGE_TEXT = (By.CSS_SELECTOR, '.large.ng-binding.ng-scope')
-
 
 # assertion data locators
 ASSERT_THIRD_PARTY_AGREEMENT_TEXT = (By.ID, 'thirdPartyResponseMessage')
@@ -69,6 +68,7 @@ cars = [
     "Other"
 ]
 
+
 def random_car_generator():
     index = random.randint(0, len(cars) - 1)
     return cars[index]
@@ -76,7 +76,7 @@ def random_car_generator():
 
 class TestSampleForm:
     man = next(person)
-    car = random_car_generator()
+    car_maker = random_car_generator()
 
     def test_minimum_required_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
@@ -90,7 +90,6 @@ class TestSampleForm:
         expected_text = SUBMITTED_FORM_TITLE
 
         assert actual_text == expected_text
-
 
     def test_required_other_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
@@ -161,7 +160,6 @@ class TestSampleForm:
         print(asterisk_color)
         print(asterisk_content)
 
-
     def all_required_fields(self, page_sp):
         page_sp.element_is_visible(NAME_FIELD).click()
         page_sp.element_is_visible(FIRST_NAME).send_keys(self.man.first_name)
@@ -173,22 +171,22 @@ class TestSampleForm:
         page_sp.element_is_visible(CONFIRM_PASSWORD_FIELD).send_keys(USER_PASSWORD)
         page_sp.element_is_visible(CHECKBOX_POLICY).click()
 
-
     def test_car_make(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
 
         self.all_required_fields(page_sp)
 
-        page_sp.select_by_value(SELECT_CAR, random_car_generator())
+        page_sp.select_by_value(SELECT_CAR, self.car_maker)
         page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
 
         actual_text = page_sp.element_is_visible(LOGIN_RESULT).text
         expected_text = SUBMITTED_FORM_TITLE
         actual_car = page_sp.element_is_visible(SELECT_CAR).text
+        expected_car = self.car_maker
 
         assert actual_text == expected_text
-        assert actual_car == actual_car
+        assert actual_car == expected_car
         elements = page_sp.elements_are_present(RESULT_PAGE_TEXT)
         text_list = [i.text for i in elements]
         alert_text = page_sp.element_is_visible(RESULT_PAGE_CONTAINER).text
@@ -196,10 +194,7 @@ class TestSampleForm:
         print(type(alert_text))
         print(alert_text)
 
-
-
-
-    #verify name_field with valid data
+    # verify name_field with valid data
     def test_name_field_valid_fist_last_name(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
@@ -222,9 +217,8 @@ class TestSampleForm:
         # Expected result - The message "This field is required" under any required fields appears
         pass
 
-
-    #Verify Gender radio buttons
-    #Precondition - the required fields are filled in
+    # Verify Gender radio buttons
+    # Precondition - the required fields are filled in
     def test_gender_radio_buttons(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
@@ -232,7 +226,7 @@ class TestSampleForm:
         # Expected result - The gender is on the Submitted sample form data
         pass
 
-    #Verify Country of Origin selection from dropdown
+    # Verify Country of Origin selection from dropdown
     # Precondition - the required fields are filled in
     def test_country_of_origin_dropdown(self, driver):
         page_sp = SampleFormPage(driver, url)
@@ -242,8 +236,7 @@ class TestSampleForm:
         # Expected result - Correct Country of Origin is on the Submitted sample form data???
         pass
 
-
-    #Verify date of birth field
+    # Verify date of birth field
     # Precondition - the required fields are filled in
     def test_date_of_birth_input(self, driver):
         page_sp = SampleFormPage(driver, url)
@@ -263,7 +256,7 @@ class TestSampleForm:
         # Expected result - Correct date Of Birth is on the Submitted sample form data???
         pass
 
-    #Verify Reset form functionality
+    # Verify Reset form functionality
     # Precondition - some of the fields are filled in
     def test_reset_button(self, driver):
         page_sp = SampleFormPage(driver, url)
@@ -313,8 +306,6 @@ class TestSampleForm:
         # Expected result: cannot possible to input more than 40.
         pass
 
-
-
         #  Check lists:
         #  Enter valid data in all required fields
         #  Select a country
@@ -330,4 +321,3 @@ class TestSampleForm:
         #  Leave the "Email" field empty, attempt to submit, and verify the error message.
         #  Leave the "Password" or "Confirm Password" field empty, attempt to submit, and verify the error message.
         #  Submit without checking the "Agree to Terms" checkbox and verify the error message.
-
