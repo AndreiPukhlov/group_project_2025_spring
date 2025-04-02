@@ -83,7 +83,7 @@ def dob_generator_select():
     return str(year), str(month), day
 
 
-def dob_generator():
+def month_day_year_generator():
     year = random.randint(date.today().year - 120, date.today().year - 18)
     month = fake.month_name()
 
@@ -97,6 +97,5 @@ def dob_generator():
     day = random.randint(1, days_in_month[month])
     return year, month, day
 
-print(dob_generator())
 
 

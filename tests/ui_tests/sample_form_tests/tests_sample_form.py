@@ -120,7 +120,6 @@ class TestSampleForm:
 
         expected_dob_final = f"{int(self.month) + 1:02}/{self.day:02}/{self.year}"
 
-
         # TODO assertions
         print(expected_dob_final)
         asterisk_color = page_sp.get_element_color(USER_NAME_LABEL)
@@ -128,12 +127,6 @@ class TestSampleForm:
         print(asterisk_color)
         print(asterisk_content)
 
-    def test_name(self):
-        project_root = Path(__file__).parent.parent.parent.parent
-        print(f"Resolved image path: {project_root}")
-        pass
-        # fjgkdfghdkfgh
-        # kdfglsdfgjdsl
 
     def all_required_fields(self, page_sp):
         page_sp.element_is_visible(NAME_FIELD).click()
