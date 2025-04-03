@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female, \
     random_country_generator
 from pages.sample_form_page import SampleFormPage
-from tests.ui_tests.sample_form_tests.tests_sample_form import image_path
+from tests.ui_tests.sample_form_tests.test_sample_form import image_path
 
 person = generate_sample_person_male()
 person2 = generate_sample_person_female()

@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female, \
     valid_password_five_chars
 from pages.sample_form_page import SampleFormPage
-from tests.ui_tests.sample_form_tests.tests_sample_form import USER_PASSWORD
+from tests.ui_tests.sample_form_tests.test_sample_form import USER_PASSWORD
 
 person = generate_sample_person_male()
 person2 = generate_sample_person_female()
