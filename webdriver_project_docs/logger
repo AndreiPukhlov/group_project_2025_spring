@@ -1,3 +1,3 @@
-To get logs in console and in log file
+To get logs in console and in log file run:
 
 pytest --log-cli-level=INFO --log-file=logs/test_logs.log --log-file-level=INFO

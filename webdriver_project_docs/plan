@@ -22,13 +22,13 @@ generators - do
 selectors - do
 alerts -
 window_handle -
-iFrame -
-dynamic locators -
-decorators - *args and **kwargs
+iFrame - done
+dynamic locators - done
+decorators - *args and **kwargs - done
 
 
-Names in Python
-12323423452345
+Names in Python -
+logger, html report, screenshots -
 
 
 
