@@ -1,17 +1,14 @@
 import datetime
 import logging
-import pytest_html
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import os
 import pytest
 import mysql.connector
 from mysql.connector import Error
-from _pytest.reports import TestReport
-from _pytest.runner import CallInfo
 
 
-@pytest.fixture(scope="session")  # module or session
+@pytest.fixture(scope="session")  # DB connection fixture / about scope in 'about_scope_for_pytest_fixture' file
 def db_connection():
     """Fixture to establish a database connection and clean up after tests."""
     try:
@@ -34,7 +31,7 @@ def db_connection():
             print("Database connection closed.")
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="function")  # DB cursor fixture
 def db_cursor(db_connection):
     """Fixture to get a fresh database cursor for each test."""
     cursor = db_connection.cursor(dictionary=False)
@@ -42,7 +39,7 @@ def db_cursor(db_connection):
     cursor.close()
 
 
-@pytest.fixture()  # about scope in 'about_scope_for_pytest_fixture' file
+@pytest.fixture()  # webdriver fixture
 def driver():
     headless = os.getenv("HEADLESS", "false").lower() == "true"
     options = Options()
@@ -58,7 +55,7 @@ def driver():
     driver.quit()
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session", autouse=True)  # logger fixture
 def setup_logging():
     logging.basicConfig(
         level=logging.INFO,
@@ -71,7 +68,7 @@ def setup_logging():
     )
 
 
-@pytest.hookimpl(tryfirst=True)
+@pytest.hookimpl(tryfirst=True)  # logs levels fixture
 def pytest_configure(config):
     config.option.log_cli = True
     config.option.log_cli_level = "INFO"
@@ -79,19 +76,16 @@ def pytest_configure(config):
     config.option.log_file_level = "INFO"
 
 
-@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)  # html report and screenshot fixture
 def pytest_runtest_makereport(item, call):
-
     outcome = yield
     report = outcome.get_result()
-
 
     if report.when == "call" and report.failed:
         driver = item.funcargs.get("driver")
         if driver and hasattr(driver, "save_screenshot"):
             screenshot_dir = "screenshots"
             os.makedirs(screenshot_dir, exist_ok=True)
-
 
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
             screenshot_path = os.path.join(
@@ -110,5 +104,3 @@ def pytest_runtest_makereport(item, call):
                 print(f"Failed to take screenshot: {e}")
 
     return report
-
-

@@ -50,17 +50,17 @@ USER_NAME_LABEL = (By.XPATH, '//label[@for="username"]')
 ASTERISK_COLOR = "rgba(51, 51, 51, 1)"
 ASTERISK = "*"
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)  # logger initialization for this file
 
 
 class TestSampleForm:
-    man = next(person)
-    year, month, day = dob_generator_select()
+    man = next(person)  # read info from person man inside the class
+    year, month, day = dob_generator_select()  # assign result of dob_gen to variables
 
     def test_minimum_required_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
-        logger.info("Opened sample form page")
+        logger.info("Open sample form page")
 
         self.all_required_fields(page_sp)
         logger.info("Populate all the required fields")
@@ -76,41 +76,56 @@ class TestSampleForm:
 
         assert actual_text == expected_text
         logger.info("Result page data and expected data are equal as expected, test passed ✅")
-        assert actual_first_name == "11111"   # self.man.first_name
+        assert actual_first_name == self.man.first_name
         logger.info("Result page actual first_name and expected first_name are equal as expected, test passed ✅")
 
     def test_all_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
-        logger.info("Opened sample form page")
+        logger.info("Open sample form page")
         self.all_required_fields(page_sp)
 
         page_sp.element_is_visible(PHONE_FIELD).send_keys(self.man.phone_number)
+        logger.info("Enter user phone number")
 
         page_sp.element_is_visible(DOB_FIELD).click()
         page_sp.select_by_text((By.CSS_SELECTOR, '[data-handler="selectYear"]'), self.year)
         page_sp.select_by_value((By.CSS_SELECTOR, '[data-handler="selectMonth"]'), self.month)
         page_sp.element_is_visible((By.XPATH, f"//a[text()='{self.day}']")).click()
+        logger.info("Enter user DOB")
 
         page_sp.element_is_visible(ADDRESS_FIELD).send_keys(self.man.address)
+        logger.info("Enter user address")
+        page_sp.select_by_text(SELECT_COUNTRY, random_country_generator())
+        logger.info("Select country")
         # TODO car maker select
 
         page_sp.element_is_visible((By.XPATH, f"//input[@value='{self.man.gender}']")).click()
+        logger.info("Enter user gender")
         page_sp.element_is_visible(ALLOW_TO_CONTACT_CHECK_BOX).click()
-        page_sp.select_by_text(SELECT_COUNTRY, random_country_generator())
+        logger.info("Allow to check")
+
         page_sp.element_is_visible(THIRD_PARTY_AGREEMENT_BUTTON).click()
+        logger.info("Third party agreement")
 
         alert_text = page_sp.get_alert_text()
         print(alert_text)
         page_sp.alert_accept()
+        # page_sp.select_by_text(SELECT_COUNTRY, random_country_generator())
+        logger.info("Accept alert")
+
         page_sp.element_is_visible(CHOOSE_FILE_BUTTON).send_keys(str(image_path))
+        logger.info("Upload image")
 
         page_sp.switch_to_iframe(ADDITIONAL_INFO_IFRAME)
         page_sp.element_is_visible(CONTACT_PERSON_NAME_IFRAME).send_keys(self.man.contact_person_name)
         page_sp.element_is_visible(CONTACT_PERSON_PHONE_IFRAME).send_keys(self.man.contact_person_phone_number)
         page_sp.switch_out_of_iframe()
+        logger.info("Contact person information added")
 
         page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
+        logger.info("The form submitted")
+
         elements = page_sp.elements_are_present(RESULT_PAGE_TEXT)
         text_list = [i.text for i in elements]
         alert_text = page_sp.element_is_visible(RESULT_PAGE_CONTAINER).text

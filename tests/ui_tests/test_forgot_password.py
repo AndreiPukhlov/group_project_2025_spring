@@ -22,7 +22,6 @@ class TestForgotPassword:
         page_lp.open()
         page_lp.element_is_visible(lp_locators.FORGOT_PASSWORD_LOCATOR).click()
 
-
         # создаем представителя класса ForgotPasswordPage
         page_fp = ForgotPasswordPage(driver, "")
         page_fp.element_is_visible(fp_locators.USERNAME_FIELD).send_keys(data.ADMIN_NAME)

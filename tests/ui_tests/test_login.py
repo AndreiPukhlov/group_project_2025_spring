@@ -1,5 +1,3 @@
-import time
-
 import pytest
 
 from data.admin_test_data import TestData
@@ -106,5 +104,3 @@ class TestLogin:
             assert get_error_message_color == expected_error_message_required_field_color
         except AssertionError as e:
             print(f"Warning: {e}")  # Logs the error but allows test execution to continue
-
-
