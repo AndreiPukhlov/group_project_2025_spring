@@ -2,9 +2,9 @@ import pytest
 from selenium.webdriver.common.by import By
 
 from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female, \
-    random_country_generator
+    random_country_generator, dob_generator_select
 from pages.sample_form_page import SampleFormPage
-from tests.ui_tests.sample_form_tests.tests_sample_form import image_path
+from tests.ui_tests.sample_form_tests.test_sample_form import image_path
 
 person = generate_sample_person_male()
 person2 = generate_sample_person_female()
@@ -27,7 +27,7 @@ FORM_SUBMIT_BUTTON = (By.CSS_SELECTOR, '[name="formSubmit"]')
 
 DOB_FIELD = (By.ID, 'dateOfBirth')
 
-NAME_FIELD_SAVE = (By.CSS_SELECTOR, '[value=""]')
+NAME_FIELD_SAVE = (By.CSS_SELECTOR, '[name="name"]')
 ALLOW_TO_CONTACT_CHECK_BOX = (By.CSS_SELECTOR, "[name='allowedToContact']")
 SELECT_COUNTRY = (By.CSS_SELECTOR, '[name="countryOfOrigin"]')
 THIRD_PARTY_AGREEMENT_BUTTON = (By.ID, 'thirdPartyButton')
@@ -43,9 +43,13 @@ CHOOSE_FILE_BUTTON = (By.ID, 'attachment')
 LOGIN_RESULT = (By.XPATH, "//legend[@class='applicationResult']")
 RESULT_PAGE_PHONE_NUMBER = (By.XPATH, "(//*[@name='phone'])[1]")
 
+REQUIRED_ERROR_MESSAGES = (By.XPATH, '//*[text()="This field is required."]')
+
 # data
 USER_PASSWORD = 'Pass123!'
 SUBMITTED_FORM_TITLE = "Submitted sample form data"
+EMPTY_FIELDS_ERROR_MESSAGE = "This field is required."
+
 
 # locators for the result page
 RESULT_PAGE_TITLE = (By.CSS_SELECTOR, '.applicationResult')
@@ -77,6 +81,9 @@ def random_car_generator():
 class TestSampleForm:
     man = next(person)
     car_maker = random_car_generator()
+    year, month, day = dob_generator_select()
+    country = random_country_generator()
+
 
     def test_minimum_required_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
@@ -160,6 +167,18 @@ class TestSampleForm:
         print(asterisk_color)
         print(asterisk_content)
 
+        # option #1
+        corrected_month = str(int(self.month) + 1)
+        month = '0' + corrected_month if len(str(int(self.month) + 1)) < 2 else corrected_month
+        day = self.day if len(str(self.day)) > 1 else int('0' + str(self.day))
+        expected_dob_1 = f"{month}/{day}/{self.year}"
+
+        # option #2 with zfill()
+        corrected_month = str(int(self.month) + 1)
+        expected_dob_2 = f"{corrected_month.zfill(2)}/{str(self.day).zfill(2)}/{self.year}"
+
+        expected_dob_final = f"{int(self.month) + 1:02}/{self.day:02}/{self.year}"
+
     def all_required_fields(self, page_sp):
         page_sp.element_is_visible(NAME_FIELD).click()
         page_sp.element_is_visible(FIRST_NAME).send_keys(self.man.first_name)
@@ -187,15 +206,9 @@ class TestSampleForm:
 
         assert actual_text == expected_text
         assert actual_car == expected_car
-        elements = page_sp.elements_are_present(RESULT_PAGE_TEXT)
-        text_list = [i.text for i in elements]
-        alert_text = page_sp.element_is_visible(RESULT_PAGE_CONTAINER).text
-        print(text_list)
-        print(type(alert_text))
-        print(alert_text)
 
-    # verify name_field with valid data
-    def test_name_field_valid_fist_last_name(self, driver):
+
+    def test_valid_name_field(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
 
@@ -204,47 +217,76 @@ class TestSampleForm:
         page_sp.element_is_visible(LAST_NAME).send_keys(self.man.last_name)
         page_sp.element_is_visible(SAVE_BUTTON).click()
 
-        # actual_name = page_sp.element_is_visible(NAME_FIELD_SAVE).text
-        # assert actual_name == self.man.first_name + self.man.last_name
+        actual_name = page_sp.element_is_visible(NAME_FIELD_SAVE).text
+        expected_name = self.man.first_name + self.man.last_name
+        assert actual_name == expected_name
 
-    # Verify form submission with missing required fields
+
     def test_empty_required_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
-        # Do not input data to the required fields - name, username, email, password, confirm password,
-        # Must check Privacy Police
-        # Click Submit button
-        # Expected result - The message "This field is required" under any required fields appears
-        pass
 
-    # Verify Gender radio buttons
-    # Precondition - the required fields are filled in
+        page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
+        error_elements = page_sp.elements_are_visible(REQUIRED_ERROR_MESSAGES)
+        error_texts = [element.text for element in error_elements]
+        assert error_texts.count(EMPTY_FIELDS_ERROR_MESSAGE) == 4
+
+
     def test_gender_radio_buttons(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
-        # Click Male or Female radio button and click Submit
-        # Expected result - The gender is on the Submitted sample form data
-        pass
 
-    # Verify Country of Origin selection from dropdown
-    # Precondition - the required fields are filled in
+        self.all_required_fields(page_sp)
+
+        page_sp.element_is_visible((By.XPATH, "//input[@name='gender' and @value='female']")).click()
+
+        page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
+
+        actual_text = page_sp.element_is_visible(LOGIN_RESULT).text
+        expected_text = SUBMITTED_FORM_TITLE
+        actual_gender = page_sp.element_is_visible((By.XPATH, "//input[@name='gender' and @value='female']")).text
+        expected_gender = page_sp.element_is_visible((By.XPATH, "//*[@id='samplePageResult']//b[contains(text(),'female')]"))
+
+        assert actual_text == expected_text
+        assert actual_gender== expected_gender
+
+
     def test_country_of_origin_dropdown(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
-        # Click on dropdown - Please select
-        # Select country and click Submit
-        # Expected result - Correct Country of Origin is on the Submitted sample form data???
-        pass
 
-    # Verify date of birth field
-    # Precondition - the required fields are filled in
+        self.all_required_fields(page_sp)
+
+        page_sp.select_by_text(SELECT_COUNTRY, random_country_generator())
+        page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
+
+        actual_text = page_sp.element_is_visible(LOGIN_RESULT).text
+        expected_text = SUBMITTED_FORM_TITLE
+        actual_country = page_sp.element_is_visible(SELECT_COUNTRY).text
+        expected_country = self.country
+
+        assert actual_text == expected_text
+        assert actual_country == expected_country
+
+
+
     def test_date_of_birth_input(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
-        # Input date with month/date/year
-        # Click Submit
-        # Expected result - Correct date Of Birth is on the Submitted sample form data???
-        pass
+
+        self.all_required_fields(page_sp)
+        page_sp.element_is_visible(DOB_FIELD).send_keys('2/23/2000')
+        page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
+
+        actual_text = page_sp.element_is_visible(LOGIN_RESULT).text
+        expected_text = SUBMITTED_FORM_TITLE
+        actual_DOB = page_sp.element_is_visible(DOB_FIELD).text('2/23/2000')
+        expected_DOB = page_sp.element_is_visible((By.XPATH, "//*[@id='samplePageResult']//b[contains(text(),'2/23/2000')]"))
+
+        assert actual_text == expected_text
+        assert actual_DOB == expected_DOB
+
+
 
     # Verify date of birth field
     # Precondition - the required fields are filled in
