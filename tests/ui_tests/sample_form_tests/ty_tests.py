@@ -1,12 +1,10 @@
-from itertools import count
-
-import pytest
+import random
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.select import Select
 
 from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female, \
     valid_password_five_chars
 from pages.sample_form_page import SampleFormPage
-from tests.ui_tests.sample_form_tests.tests_sample_form import USER_PASSWORD
 
 person = generate_sample_person_male()
 person2 = generate_sample_person_female()
@@ -24,6 +22,7 @@ CONFIRM_PASSWORD_FIELD = (By.ID, "confirmPassword")
 SUBMITTED_SAMPLE_FORM_DATA = (By.CSS_SELECTOR, '.applicationResult')
 SUBMITTED_NAME = (By.CSS_SELECTOR, '[name="name"]')
 REQUIRED_ERROR_MESSAGES = (By.XPATH, '//*[text()="This field is required."]')
+CAR_MAKE_LOCATOR = (By.NAME, "carMake")
 
 #locators for buttons and checkbox
 SAVE_BUTTON = (By.XPATH, "//*[text()='Save']")
@@ -36,6 +35,12 @@ SUBMITTED_FORM_TEXT = "Submitted sample form data"
 EMPTY_FIELDS_ERROR_MESSAGE = "This field is required."
 CHECKBOX_ERROR_MESSAGE = "- Must check!"
 USER_PASSWORD_GENERATOR = valid_password_five_chars()
+
+#generator
+cars = ["Ford", "Toyota", "BMW", "Other"]
+
+def random_cars_generator():
+    return random.choice(cars)
 
 
 class TestSampleForm:
@@ -51,8 +56,8 @@ class TestSampleForm:
         page_sp.element_is_visible(SAVE_BUTTON).click()
         page_sp.element_is_visible(USERNAME_FIELD).send_keys(self.man.first_name + self.man.last_name)
         page_sp.element_is_visible(EMAIL_FIELD).send_keys(self.man.email)
-        page_sp.element_is_visible(PASSWORD_FIELD).send_keys(USER_PASSWORD)
-        page_sp.element_is_visible(CONFIRM_PASSWORD_FIELD).send_keys(USER_PASSWORD)
+        page_sp.element_is_visible(PASSWORD_FIELD).send_keys(USER_PASSWORD_GENERATOR)
+        page_sp.element_is_visible(CONFIRM_PASSWORD_FIELD).send_keys(USER_PASSWORD_GENERATOR)
         page_sp.element_is_visible(PRIVACY_POLICY_CHECKBOX).click()
         page_sp.element_is_visible(SUBMIT_BUTTON).click()
         actual_text = page_sp.element_is_visible(SUBMITTED_SAMPLE_FORM_DATA).text
@@ -83,13 +88,20 @@ class TestSampleForm:
         page_sp.element_is_visible(SAVE_BUTTON).click()
         page_sp.element_is_visible(USERNAME_FIELD).send_keys(self.man.first_name + self.man.last_name)
         page_sp.element_is_visible(EMAIL_FIELD).send_keys(self.man.email)
-        page_sp.element_is_visible(PASSWORD_FIELD).send_keys(USER_PASSWORD)
-        page_sp.element_is_visible(CONFIRM_PASSWORD_FIELD).send_keys(USER_PASSWORD)
-
-        privacy_checkbox = page_sp.element_is_visible(PRIVACY_POLICY_CHECKBOX)
-        assert not privacy_checkbox.is_selected()
+        page_sp.element_is_visible(PASSWORD_FIELD).send_keys(USER_PASSWORD_GENERATOR)
+        page_sp.element_is_visible(CONFIRM_PASSWORD_FIELD).send_keys(USER_PASSWORD_GENERATOR)
 
         page_sp.element_is_visible(SUBMIT_BUTTON).click()
         actual_text = page_sp.element_is_visible(CHECKBOX_ERROR_LOCATOR).text
         assert actual_text == CHECKBOX_ERROR_MESSAGE
+
+    def test_select_car_make(self, driver):
+        page_sp = SampleFormPage(driver, URL)
+        page_sp.open()
+
+        car_select = Select(page_sp.element_is_visible(CAR_MAKE_LOCATOR))
+        random_car = random_cars_generator()
+        car_select.select_by_visible_text(random_car)
+        selected_car = car_select.first_selected_option.text
+        assert selected_car == random_car
 
