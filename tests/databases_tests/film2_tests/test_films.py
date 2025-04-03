@@ -2,7 +2,6 @@ from pprint import pprint
 import pytest
 from database.film2_queries.film_queries import *
 
-@pytest.mark.database
 def test_get_all_data(db_cursor):
     db_cursor.execute(get_all_data_query)
     result = db_cursor.fetchall()

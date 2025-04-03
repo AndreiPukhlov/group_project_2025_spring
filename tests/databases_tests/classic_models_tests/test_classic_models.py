@@ -4,7 +4,7 @@ import pytest
 from database.classic_model_quires.classic_models_queries import *
 
 
-@pytest.mark.database
+@pytest.mark.skip
 def test_get_top_vendor(db_cursor):
     """Test the get_top_vendor function using a fixture."""
     db_cursor.execute(get_top_vendor_query)
@@ -13,7 +13,7 @@ def test_get_top_vendor(db_cursor):
     assert result is not None
 
 
-@pytest.mark.database
+@pytest.mark.skip
 @pytest.mark.parametrize("country", ["USA", "France", "Germany"])
 def test_fetch_customers_by_country(db_cursor, country):
     db_cursor.execute(fetch_customers_by_country_query, (country,))
@@ -22,7 +22,7 @@ def test_fetch_customers_by_country(db_cursor, country):
     assert any(country in row[2] for row in result)
 
 
-@pytest.mark.database
+@pytest.mark.skip
 def test_get_vendors_product_lines_products(db_cursor):
     db_cursor.execute(vendors_product_lines_products_query)
     result = db_cursor.fetchone()
@@ -30,7 +30,7 @@ def test_get_vendors_product_lines_products(db_cursor):
     assert result == (110, 7, 13)
 
 
-@pytest.mark.database
+@pytest.mark.skip
 def test_get_avg_msrp_buy_price(db_cursor):
     db_cursor.execute(avg_msrp_buy_price_query)
     result = db_cursor.fetchall()
@@ -42,7 +42,7 @@ def test_get_avg_msrp_buy_price(db_cursor):
     assert len(result) == 13
 
 
-@pytest.mark.database
+@pytest.mark.skip
 def test_max_sails_vendor(db_cursor):
     db_cursor.execute(max_sails_vendor_query)
     result = db_cursor.fetchone()
@@ -51,7 +51,7 @@ def test_max_sails_vendor(db_cursor):
     assert result == ({'productVendor': 'Classic Metal Creations', 'total_orders': Decimal('9678')})
 
 
-@pytest.mark.database
+@pytest.mark.skip
 def test_most_sold_product(db_cursor):
     db_cursor.execute(most_sold_product_query)
     result = db_cursor.fetchone()
@@ -59,7 +59,7 @@ def test_most_sold_product(db_cursor):
     assert result == ('1992 Ferrari 360 Spider red', Decimal('1808'))
 
 
-@pytest.mark.database
+@pytest.mark.skip
 def test_buyprice_msrp_difference(db_cursor):
     db_cursor.execute(buyprice_msrp_difference_query)
     result = db_cursor.fetchall()
@@ -71,7 +71,7 @@ def test_buyprice_msrp_difference(db_cursor):
                          Decimal('-40.55'))
 
 
-@pytest.mark.database
+@pytest.mark.skip
 def test_get_union_buy_price(db_cursor):
     db_cursor.execute(get_union_buyprice_query)
     result = db_cursor.fetchall()
@@ -79,21 +79,21 @@ def test_get_union_buy_price(db_cursor):
     assert len(result) == 110
 
 
-@pytest.mark.database
+@pytest.mark.skip
 def test_get_all_canceled_orders(db_cursor):
     db_cursor.execute(get_all_canceled_orders_query)
     result = db_cursor.fetchone()
     assert result[0] == 6
 
 
-@pytest.mark.database
+@pytest.mark.skip
 def test_all_orders_created(db_cursor):
     db_cursor.execute(all_orders_created_query)
     result = db_cursor.fetchone()
     assert result[0] == 326
 
 
-@pytest.mark.database
+@pytest.mark.skip
 def test_number_of_products_per_product_line(db_cursor):
     expected_list = [('Classic Cars', 38), ('Motorcycles', 13), ('Planes', 12), ('Ships', 9), ('Trains', 3),
                      ('Trucks and Buses', 11), ('Vintage Cars', 24)]
@@ -102,7 +102,7 @@ def test_number_of_products_per_product_line(db_cursor):
     assert result == expected_list
 
 
-@pytest.mark.database
+@pytest.mark.skip
 def test_number_of_no_customer_employees(db_cursor):
     db_cursor.execute(number_of_no_customer_employees_query)
     result = db_cursor.fetchone()

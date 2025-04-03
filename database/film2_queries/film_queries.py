@@ -1,5 +1,3 @@
-from database.connection import get_db_connection_film2
-
 
 get_all_data_query = """
     select * 
@@ -28,4 +26,3 @@ movies_where_writer_is_query = """
         FROM `film2`.`film_locations_in_san_francisco`
     where Writer = %s;
     """
-

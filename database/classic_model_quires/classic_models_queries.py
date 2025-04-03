@@ -1,4 +1,4 @@
-from database.connection import get_db_connection_classic_model
+
 
 get_top_vendor_query = """
     SELECT pr.productVendor, SUM(od.quantityOrdered) AS total_orders
@@ -12,8 +12,8 @@ get_top_vendor_query = """
 fetch_customers_by_country_query = "SELECT customerName, city, country FROM customers WHERE country = %s"
 
 vendors_product_lines_products_query = """
-    select count(distinct productCode) as products_total, 
-        count(distinct productLine) as prodlines_total, 
+    select count(distinct productCode) as products_total,
+        count(distinct productLine) as prodlines_total,
         count(distinct productVendor) as vendors_total
     from products;
         """
@@ -46,7 +46,7 @@ most_sold_product_query = """
         """
 
 buyprice_msrp_difference_query = """
-   SELECT SUM(prod.msrp * det.quantityOrdered) as msrp_sales, 
+   SELECT SUM(prod.msrp * det.quantityOrdered) as msrp_sales,
 SUM(prod.buyPrice * det.quantityOrdered) as buyPrice_sales,
 SUM(prod.msrp * det.quantityOrdered) - SUM(prod.buyPrice * det.quantityOrdered) as difference_in_sales
 FROM classicmodels.products prod
