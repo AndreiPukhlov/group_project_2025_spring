@@ -1,5 +1,7 @@
 import datetime
 import logging
+
+from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import os
@@ -7,7 +9,7 @@ import pytest
 import mysql.connector
 from mysql.connector import Error
 
-
+load_dotenv()
 @pytest.fixture(scope="session")  # DB connection fixture / about scope in 'about_scope_for_pytest_fixture' file
 def db_connection():
     """Fixture to establish a database connection and clean up after tests."""
@@ -16,7 +18,7 @@ def db_connection():
             'user': os.getenv('DB_USER'),
             'password': os.getenv('DB_PASSWORD'),
             'host': os.getenv('DB_HOST'),
-            'database': os.getenv('DB_NAME', 'classicmodels'),  # Default DB
+            'database': os.getenv('DB_NAME', "classicmodels"),
             'raise_on_warnings': True
         }
         connection = mysql.connector.connect(**config)

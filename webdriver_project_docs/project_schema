@@ -1,31 +1,38 @@
 pytest_selenium_project/
 
-── data/                   # Test data
-│   ├── __init__.py
+│── data/                    # Test data, locators, generators
+│   ├──
 │   ├── urls/
 │   ├── locators/
+│   ├── images/
 │   │── test_data/
-    ├── generators/
+│   ├── generators/
+│   ├── __init__.py
 │
+│── databases/                  # Data bases queries and ETL files
+├   ├── queries_1/
+│   ├── queries_2/
+│   │── queries_3/
+│   ├── csv_loader/
+│   ├── __init__.py
 │
-│── tests/                   # Test cases
+│── pages/
+│   │──  base_page.py            # Page Object Model (POM) classes
+│   ├──  sample_form_page.py
+│   ├── login_page.py
+│   ├── search_page.py
+│   ├── __init__.py
+│
+│──── tests/                      # Test cases
 │   ├── __init__.py
 │   ├── test_login.py
 │   ├── test_search.py
+│   ├── reports/ logs /            # Test reports (logs, HTML reports)
 │
-│── pages/
-│   │--  base_page.py        # Page Object Model (POM) classes
-│   ├── __init__.py
-│   ├── login_page.py
-│   ├── search_page.py
+│── config/                        # Configurations (URLs, browser settings)
 │
-│──
+│── utilities/                     # Functions/Utils
 │
-│── config/                  # Configurations (URLs, browser settings)
-│
-│── utilities/               # Functions/Utils
-│
-│── reports/                 # Test reports (logs, HTML reports)
 │
 │── conftest.py              # Global Pytest setup for WebDriver
 │── pytest.ini               # Pytest configuration
