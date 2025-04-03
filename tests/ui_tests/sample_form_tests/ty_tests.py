@@ -100,7 +100,6 @@ class TestSampleForm:
         page_sp.open()
 
         car_select = Select(page_sp.element_is_visible(CAR_MAKE_LOCATOR))
-
         random_car = random_cars_generator()
         car_select.select_by_visible_text(random_car)
         selected_car = car_select.first_selected_option.text
