@@ -17,10 +17,10 @@ pytest_selenium_project/
 │   ├── __init__.py
 │
 │── pages/
-│   │──  base_page.py            # Page Object Model (POM) classes
-│   ├──  sample_form_page.py
+│   │── base_page.py            # Page Object Model (POM) classes
 │   ├── login_page.py
-│   ├── search_page.py
+│   ├── forgot_pass_page.py
+│   ├── home_page.py
 │   ├── __init__.py
 │
 │──── tests/                      # Test cases
@@ -29,7 +29,6 @@ pytest_selenium_project/
 │   ├── test_search.py
 │   ├── reports/ logs /            # Test reports (logs, HTML reports)
 │
-│── config/                        # Configurations (URLs, browser settings)
 │
 │── utilities/                     # Functions/Utils
 │

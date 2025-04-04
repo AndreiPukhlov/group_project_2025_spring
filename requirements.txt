@@ -1,4 +1,6 @@
-# pip install -r requirements.txt
+
+# pip freeze > requirements.txt  - to get requirements form the project
+# pip install -r requirements.txt  - to install requrements
 
 attrs==25.1.0
 certifi==2025.1.31
