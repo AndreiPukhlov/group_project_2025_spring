@@ -26,7 +26,7 @@ Element Interaction
     is_displayed(): Checks if an element is currently visible.
     is_enabled(): Checks if an element is enabled.
     is_selected(): Checks if an element is selected (e.g., checkbox, radio button).
-    get_attribute(name): Gets the value of an element's attribute.
+    get_attribute("id"): Gets the value of an element's attribute.
     value_of_css_property(property_name): Gets the value of a CSS property of an element.
     screenshot(filename): Saves a screenshot of the current element to a PNG file.
 

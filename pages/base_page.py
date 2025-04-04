@@ -7,14 +7,22 @@ from selenium.webdriver.webkitgtk.webdriver import WebDriver
 
 class BasePage(object):
 
-    def __init__(self, driver: WebDriver, url: str, timeout: int = 23):  # lesson 7
+    def __init__(self, driver: WebDriver, url: str, timeout: int = 23, attribute_name: str = None):  # lesson 7
         self.driver = driver
         self.url = url
         self.timeout = timeout
         self.action = ActionChains(self.driver)
+        self.attribute_name = attribute_name
 
     def open(self):
         self.driver.get(self.url)
+
+    def get_element_attribute(self, locator, timeout=None, attribute_name=None):
+        return (WAIT(self.driver, timeout or self.timeout)
+                .until(EC.visibility_of_element_located(locator)).get_attribute(attribute_name))
+
+
+
 
     def element_is_visible(self, locator, timeout=None):
         return WAIT(self.driver, timeout or self.timeout).until(EC.visibility_of_element_located(locator))
@@ -61,6 +69,12 @@ class BasePage(object):
 
     def get_window_handles(self):
         return self.driver.window_handles
+
+    def switch_to_window(self, window):
+        self.driver.switch_to.window(window)
+
+    def close_window(self):
+        self.driver.close()
 
     def get_css_property(self, locator, property_name):
         data = self.element_is_visible(locator)

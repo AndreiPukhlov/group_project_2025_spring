@@ -30,7 +30,12 @@ countries = [
     "Uzbekistan",
     "Other"
 ]
-
+cars = [
+    "Ford",
+    "Toyota",
+    "BMW",
+    "Other"
+]
 
 def generate_sample_person_male():
     yield SamplePerson(
@@ -98,4 +103,6 @@ def month_day_year_generator():
     return year, month, day
 
 
-
+def random_car_generator():
+    index = random.randint(0, len(cars) - 1)
+    return cars[index]
