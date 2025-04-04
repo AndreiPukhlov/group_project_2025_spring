@@ -1,10 +1,11 @@
 import random
+from pathlib import Path
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
-
 from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female, \
     valid_password_five_chars
 from pages.sample_form_page import SampleFormPage
+
 
 person = generate_sample_person_male()
 person2 = generate_sample_person_female()
@@ -29,6 +30,7 @@ SAVE_BUTTON = (By.XPATH, "//*[text()='Save']")
 SUBMIT_BUTTON = (By.ID, 'formSubmit')
 PRIVACY_POLICY_CHECKBOX = (By.NAME, "agreedToPrivacyPolicy")
 CHECKBOX_ERROR_LOCATOR = (By.XPATH, '//label[contains(text(), "Must check")]')
+CHOOSE_FILE_BUTTON_LOCATOR = (By.ID, 'attachment')
 
 #data
 SUBMITTED_FORM_TEXT = "Submitted sample form data"
@@ -104,4 +106,17 @@ class TestSampleForm:
         car_select.select_by_visible_text(random_car)
         selected_car = car_select.first_selected_option.text
         assert selected_car == random_car
+
+    def test_upload_image(self, driver):
+        project_root = Path(__file__).resolve().parent.parent.parent.parent
+        image_path = project_root / "data" / "images" / "se.jpg"
+        print(f"\nProject root: {project_root}")
+        print(f"\nImage path: {image_path}")
+
+        page_sp = SampleFormPage(driver, URL)
+        page_sp.open()
+
+        file_input = page_sp.element_is_visible(CHOOSE_FILE_BUTTON_LOCATOR)
+        file_input.send_keys(str(image_path))
+        assert image_path.name in file_input.get_attribute("value")
 
