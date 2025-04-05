@@ -169,7 +169,7 @@ class TestSampleForm:
             self.man.first_name, self.man.last_name, expected_dob_final,
             self.man.gender, str(self.man.phone_number), self.man.address.replace("\n", " "), self.man.email,
             self.man.contact_person_name, self.man.contact_person_phone_number,
-            self.car_maker_generator,
+            self.car_maker_generator, country
         ]
         logger.info("List of data for assertion created")
 
