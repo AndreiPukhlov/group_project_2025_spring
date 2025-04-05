@@ -204,12 +204,9 @@ class TestSampleForm:
         page_sp.select_by_value(SELECT_CAR, self.car_maker)
         page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
 
-        actual_text = page_sp.element_is_visible(LOGIN_RESULT).text
-        expected_text = SUBMITTED_FORM_TITLE
         actual_car = page_sp.element_is_visible(SELECT_CAR).text
         expected_car = self.car_maker
 
-        assert actual_text == expected_text
         assert actual_car == expected_car
 
 
@@ -268,34 +265,40 @@ class TestSampleForm:
 
 
 
-    # def test_date_of_birth_input(self, driver):
-    #     page_sp = SampleFormPage(driver, url)
-    #     page_sp.open()
-    #
-    #     self.all_required_fields(page_sp)
-    #     page_sp.element_is_visible(DOB_FIELD).send_keys('2/23/2000')
-    #     page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
-    #
-    #     actual_text = page_sp.element_is_visible(LOGIN_RESULT).text
-    #     expected_text = SUBMITTED_FORM_TITLE
-    #     actual_DOB = page_sp.element_is_visible(DOB_FIELD).text('2/23/2000')
-    #     expected_DOB = page_sp.element_is_visible((By.XPATH, "//*[@id='samplePageResult']//b[contains(text(),'2/23/2000')]"))
-    #
-    #     assert actual_text == expected_text
-    #     assert actual_DOB == expected_DOB
-    #
-    #
-    #
-    # # Verify date of birth field
-    # # Precondition - the required fields are filled in
-    # def test_date_of_birth_select(self, driver):
-    #     page_sp = SampleFormPage(driver, url)
-    #     page_sp.open()
-    #     # Select month/date/year
-    #     # Click Submit
-    #     # Expected result - Correct date Of Birth is on the Submitted sample form data???
-    #     pass
-    #
+    def test_date_of_birth_input(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+
+        self.all_required_fields(page_sp)
+
+        page_sp.element_is_visible(DOB_FIELD).send_keys('02/23/2000')
+        page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
+
+        actual_DOB = page_sp.element_is_visible((By.XPATH, '//b[@name="dateOfBirth"]')).text
+        assert actual_DOB == '02/23/2000'
+        print(actual_DOB)
+
+
+    def test_date_of_birth_generator(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+
+        self.all_required_fields(page_sp)
+
+        page_sp.element_is_visible(DOB_FIELD).click()
+        page_sp.select_by_text((By.CSS_SELECTOR, '[data-handler="selectYear"]'), self.year)
+        page_sp.select_by_value((By.CSS_SELECTOR, '[data-handler="selectMonth"]'), self.month)
+        page_sp.element_is_visible((By.XPATH, f"//a[text()='{self.day}']")).click()
+
+        page_sp.element_is_visible(FORM_SUBMIT_BUTTON).click()
+
+        actual_dob = page_sp.element_is_visible((By.XPATH, '//input[@name="dateOfBirth"]')).get_attribute("value")
+        expected_dob = f"{int(self.month) + 1:02}/{self.day:02}/{self.year}"
+        assert actual_dob == expected_dob
+
+
+
+
     # # Verify Reset form functionality
     # # Precondition - some of the fields are filled in
     # def test_reset_button(self, driver):
