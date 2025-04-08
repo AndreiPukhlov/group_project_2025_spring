@@ -37,6 +37,7 @@ cars = [
     "Other"
 ]
 
+
 def generate_sample_person_male():
     yield SamplePerson(
         first_name=fake.first_name_male(),
@@ -58,11 +59,6 @@ def generate_sample_person_female():
 
 def get_first_name():
     return fake.last_name()
-
-
-def random_country_generator():
-    index = random.randint(0, len(countries) - 1)
-    return countries[index]
 
 
 def valid_password_five_chars():
@@ -103,6 +99,9 @@ def month_day_year_generator():
     return year, month, day
 
 
-def random_car_generator():
-    index = random.randint(0, len(cars) - 1)
-    return cars[index]
+def random_choice_generator(items):
+    return random.choice(items)
+
+
+def random_choices_generator(items):
+    return random.choices(items, k=2)

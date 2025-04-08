@@ -17,12 +17,9 @@ class BasePage(object):
     def open(self):
         self.driver.get(self.url)
 
-    def get_element_attribute(self, locator, timeout=None, attribute_name=None):
+    def get_element_attribute(self, locator, attribute_name, timeout=None):
         return (WAIT(self.driver, timeout or self.timeout)
                 .until(EC.visibility_of_element_located(locator)).get_attribute(attribute_name))
-
-
-
 
     def element_is_visible(self, locator, timeout=None):
         return WAIT(self.driver, timeout or self.timeout).until(EC.visibility_of_element_located(locator))
@@ -67,6 +64,7 @@ class BasePage(object):
     def get_element_by_locator(self, locator):
         return self.element_is_visible(locator)
 
+# windows methods
     def get_window_handles(self):
         return self.driver.window_handles
 
@@ -80,6 +78,7 @@ class BasePage(object):
         data = self.element_is_visible(locator)
         return data.value_of_css_property(property_name)
 
+# alerts methods
     def alert(self):
         return self.driver.switch_to.alert
 

@@ -2,7 +2,7 @@ import logging
 from selenium.webdriver.common.by import By
 from pathlib import Path
 from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female, \
-    random_country_generator, valid_password_five_chars, dob_generator_select, random_car_generator
+    valid_password_five_chars, dob_generator_select, random_choice_generator
 from pages.sample_form_page import SampleFormPage
 from tests.ui_tests.sample_form_tests.test_ty import REQUIRED_ERROR_MESSAGES
 
@@ -48,6 +48,35 @@ SUBMITTED_FORM_TITLE = "Submitted sample form data"
 USER_PASSWORD = valid_password_five_chars()
 project_root = Path(__file__).parent.parent.parent.parent
 image_path = project_root / "data" / "images" / "se.jpg"
+countries = [
+    "Austria",
+    "Belarus",
+    "Canada",
+    "China",
+    "France",
+    "Germany",
+    "India",
+    "Israel",
+    "Italy",
+    "Japan",
+    "South Korea",
+    "Lithuania",
+    "Monaco",
+    "Netherlands (Holland)",
+    "Pakistan",
+    "Russia",
+    "Ukraine",
+    "United Kingdom",
+    "United States of America",
+    "Uzbekistan",
+    "Other"
+]
+cars = [
+    "Ford",
+    "Toyota",
+    "BMW",
+    "Other"
+]
 
 # assertion data locators
 ASSERT_THIRD_PARTY_AGREEMENT_TEXT = (By.ID, 'thirdPartyResponseMessage')
@@ -72,7 +101,6 @@ logger = logging.getLogger(__name__)  # logger initialization for this file
 class TestSampleForm:
     man = next(person)  # read info from person man inside the class
     year, month, day = dob_generator_select()  # assign result of dob_gen to variables
-    car_maker_generator = random_car_generator()
 
     def test_minimum_required_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
@@ -113,11 +141,11 @@ class TestSampleForm:
 
         page_sp.element_is_visible(ADDRESS_FIELD).send_keys(self.man.address)
         logger.info("Enter user address")
-        country = random_country_generator()
+        country = random_choice_generator(countries)
         page_sp.select_by_text(SELECT_COUNTRY, country)
         logger.info("Select country")
 
-        car_maker = self.car_maker_generator
+        car_maker = random_choice_generator(cars)
         page_sp.select_by_value(SELECT_CAR_MAKER, car_maker)
         logger.info('Car maker selected')
 
@@ -139,8 +167,7 @@ class TestSampleForm:
 
         page_sp.element_is_visible(CHOOSE_FILE_BUTTON).send_keys(str(image_path))
         logger.info("Image uploaded")
-
-        uploaded_file_path = page_sp.get_element_attribute(ATTACHMENT_NAME, 10, 'value')
+        uploaded_file_path = page_sp.get_element_attribute(ATTACHMENT_NAME, 'value')
         actual_uploaded_file_name = uploaded_file_path.split("\\")[-1]
         # print(actual_uploaded_file_name)
         logger.info("Got uploaded image file name")
@@ -180,7 +207,7 @@ class TestSampleForm:
             self.man.first_name, self.man.last_name, expected_dob_final,
             self.man.gender, str(self.man.phone_number), self.man.address.replace("\n", " "), self.man.email,
             self.man.contact_person_name, self.man.contact_person_phone_number,
-            self.car_maker_generator, country
+            car_maker, country
         ]
         logger.info("List of data for assertion created")
 
