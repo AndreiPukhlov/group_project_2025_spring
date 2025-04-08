@@ -40,7 +40,6 @@ create_database()
 
 engine = create_engine(f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{db_name}")
 
-
 @time_count
 def import_file(file_name, file_type="csv", chunk_size=5000):
     """

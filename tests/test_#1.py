@@ -2,6 +2,8 @@ import time
 
 import pytest
 from selenium import webdriver
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 def get_driver():   # function returns webdriver and can be used from anywhere
@@ -17,7 +19,9 @@ class TestSmth:
 
     @pytest.mark.skip
     def test_url_status(self):
-        driver = webdriver.Chrome()               # local variable - not seen from outside the method
+        driver = webdriver.Chrome()
+        driver.implicitly_wait(10)
+        # local variable - not seen from outside the method
         driver.get("https://www.apple.com")
         expected_url = "https://www.apple.com/"   # local variable - not seen from outside the method
         assert driver.current_url == expected_url

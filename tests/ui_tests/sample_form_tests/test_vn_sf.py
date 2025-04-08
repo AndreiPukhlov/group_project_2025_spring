@@ -29,8 +29,9 @@ FORM_SUBMIT_BUTTON = (By.CSS_SELECTOR, '[name="formSubmit"]')
 
 DOB_FIELD = (By.ID, 'dateOfBirth')
 
-SELECTED_GENDER_FEMALE= (By.XPATH, "//input[@value = 'female' and @class = 'ng-valid ng-dirty ng-touched ng-valid-parse']")
-SELECTED_GENDER_MALE= (By.XPATH, "//input[@value = 'male' and @class = 'ng-valid ng-dirty ng-touched ng-valid-parse']")
+SELECTED_GENDER_FEMALE = (
+By.XPATH, "//input[@value = 'female' and @class = 'ng-valid ng-dirty ng-touched ng-valid-parse']")
+SELECTED_GENDER_MALE = (By.XPATH, "//input[@value = 'male' and @class = 'ng-valid ng-dirty ng-touched ng-valid-parse']")
 
 NAME_FIELD_SAVE = (By.ID, "name")
 ALLOW_TO_CONTACT_CHECK_BOX = (By.CSS_SELECTOR, "[name='allowedToContact']")
@@ -54,7 +55,6 @@ REQUIRED_ERROR_MESSAGES = (By.XPATH, '//*[text()="This field is required."]')
 USER_PASSWORD = 'Pass123!'
 SUBMITTED_FORM_TITLE = "Submitted sample form data"
 EMPTY_FIELDS_ERROR_MESSAGE = "This field is required."
-
 
 # locators for the result page
 RESULT_PAGE_TITLE = (By.CSS_SELECTOR, '.applicationResult')
@@ -88,7 +88,6 @@ class TestSampleForm:
     car_maker = random_car_generator()
     year, month, day = dob_generator_select()
     country = random_country_generator()
-
 
     def test_minimum_required_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
@@ -209,7 +208,6 @@ class TestSampleForm:
 
         assert actual_car == expected_car
 
-
     def test_valid_name_field(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
@@ -223,7 +221,6 @@ class TestSampleForm:
         expected_name = self.man.first_name + " " + self.man.last_name
         assert actual_name == expected_name
 
-
     def test_empty_required_fields(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
@@ -232,7 +229,6 @@ class TestSampleForm:
         error_elements = page_sp.elements_are_visible(REQUIRED_ERROR_MESSAGES)
         error_texts = [element.text for element in error_elements]
         assert error_texts.count(EMPTY_FIELDS_ERROR_MESSAGE) == 4
-
 
     def test_gender_radio_buttons(self, driver):
         page_sp = SampleFormPage(driver, url)
@@ -250,7 +246,6 @@ class TestSampleForm:
         actual_gender = page_sp.element_is_visible((By.XPATH, '//b[@name="gender"]')).text
         assert actual_gender == "female"
 
-
     def test_country_of_origin_dropdown(self, driver):
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
@@ -262,8 +257,6 @@ class TestSampleForm:
 
         actual_country = page_sp.element_is_visible(SELECT_COUNTRY).text
         assert actual_country == self.country
-
-
 
     def test_date_of_birth_input(self, driver):
         page_sp = SampleFormPage(driver, url)
@@ -277,7 +270,6 @@ class TestSampleForm:
         actual_DOB = page_sp.element_is_visible((By.XPATH, '//b[@name="dateOfBirth"]')).text
         assert actual_DOB == '02/23/2000'
         print(actual_DOB)
-
 
     def test_date_of_birth_generator(self, driver):
         page_sp = SampleFormPage(driver, url)
@@ -295,9 +287,6 @@ class TestSampleForm:
         actual_dob = page_sp.element_is_visible((By.XPATH, '//input[@name="dateOfBirth"]')).get_attribute("value")
         expected_dob = f"{int(self.month) + 1:02}/{self.day:02}/{self.year}"
         assert actual_dob == expected_dob
-
-
-
 
     # # Verify Reset form functionality
     # # Precondition - some of the fields are filled in
@@ -349,18 +338,18 @@ class TestSampleForm:
     #     # Expected result: cannot possible to input more than 40.
     #     pass
 
-        #  Check lists:
-        #  Enter valid data in all required fields
-        #  Select a country
-        #  Enter a valid address
-        #  Enter a valid phone number
-        #  Select a gender
-        #  Select Car Make
-        #  Select a date of birth
-        #  Check the "Agree to Terms" checkbox
-        #  Click "Submit" and verify that "SUBMITTED SAMPLE FORM DATA" appears.
-        #  Leave "First Name" field empty, attempt to submit, and verify the error message.
-        #  Leave "Last Name" field empty, attempt to submit, and verify the error message.
-        #  Leave the "Email" field empty, attempt to submit, and verify the error message.
-        #  Leave the "Password" or "Confirm Password" field empty, attempt to submit, and verify the error message.
-        #  Submit without checking the "Agree to Terms" checkbox and verify the error message.
+    #  Check lists:
+    #  Enter valid data in all required fields
+    #  Select a country
+    #  Enter a valid address
+    #  Enter a valid phone number
+    #  Select a gender
+    #  Select Car Make
+    #  Select a date of birth
+    #  Check the "Agree to Terms" checkbox
+    #  Click "Submit" and verify that "SUBMITTED SAMPLE FORM DATA" appears.
+    #  Leave "First Name" field empty, attempt to submit, and verify the error message.
+    #  Leave "Last Name" field empty, attempt to submit, and verify the error message.
+    #  Leave the "Email" field empty, attempt to submit, and verify the error message.
+    #  Leave the "Password" or "Confirm Password" field empty, attempt to submit, and verify the error message.
+    #  Submit without checking the "Agree to Terms" checkbox and verify the error message.
