@@ -1,6 +1,9 @@
 import logging
 from selenium.webdriver.common.by import By
 from pathlib import Path
+
+from selenium.webdriver.support.wait import WebDriverWait
+
 from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female, \
     valid_password_five_chars, dob_generator_select, random_choice_generator
 from pages.sample_form_page import SampleFormPage
@@ -16,7 +19,13 @@ NAME_FIELD = (By.CSS_SELECTOR, '#name')
 FIRST_NAME_FIELD = (By.ID, 'firstName')
 LAST_NAME_FIELD = (By.ID, 'lastName')
 DOB_FIELD = (By.ID, 'dateOfBirth')
-USER_NAME_FIELD = (By.CSS_SELECTOR, "[name='username']")
+
+"""IT IS VERY IMPORTANT TO USE THIS SELECTOR INSTEAD OF THE ORIGINAL ONE if you
+want to use page_sp.element_is_visible(USER_NAME_FIELD).get_attribute("value").
+When I tried to get value of username field it was finding the name tag instead.
+I spent an hour just to figure it out, don't be like me"""
+USER_NAME_FIELD = (By.CSS_SELECTOR, "input[name='username']")
+# USER_NAME_FIELD = (By.CSS_SELECTOR, "[name='username']")
 EMAIL_FIELD = (By.CSS_SELECTOR, "[name='email']")
 PASSWORD_FIELD = (By.ID, "password")
 CONFIRM_PASSWORD_FIELD = (By.ID, "confirmPassword")
@@ -24,6 +33,7 @@ PHONE_FIELD = (By.CSS_SELECTOR, '[name="phone"]')
 ADDRESS_FIELD = (By.ID, 'address')
 CHOOSE_FILE_BUTTON = (By.ID, 'attachment')
 SAVE_BUTTON = (By.XPATH, "//*[text()='Save']")
+RESET_BUTTON = (By.XPATH, "//*[text()='Reset']")
 FORM_SUBMIT_BUTTON = (By.ID, 'formSubmit')
 PRIVACY_POLICY_CHECKBOX = (By.CSS_SELECTOR, '[name="agreedToPrivacyPolicy"]')
 ALLOW_TO_CONTACT_CHECK_BOX = (By.CSS_SELECTOR, "[name='allowedToContact']")
@@ -291,6 +301,24 @@ class TestSampleForm:
                    for error_locator in REQUIRED_ERROR_MESSAGE)
         assert not confirm_password_field.is_enabled()
         assert thirdpartyagreement_error_message == "- Must check!"
+
+    def test_reset_button(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+        logger.info("Open sample form page")
+        self.all_required_fields(page_sp)
+        logger.info("Filled out all required fields")
+
+        page_sp.element_is_visible(RESET_BUTTON).click()
+        logger.info("Clicked reset button")
+        top_container = driver.find_element(By.CSS_SELECTOR, "div.col-xs-12.col-md-8")
+        logger.info("Got first container")
+        top_container_inputs = top_container.find_elements(By.CSS_SELECTOR, "input")
+
+        for input_field in top_container_inputs:
+            assert input_field.get_attribute("value") == ""
+
+        #TODO second container
 
     def all_required_fields(self, page_sp):
         page_sp.element_is_visible(NAME_FIELD).click()
