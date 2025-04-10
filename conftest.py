@@ -9,6 +9,9 @@ import pytest
 import mysql.connector
 from mysql.connector import Error
 
+from utilities.functions import get_root_path
+
+download_path = get_root_path("data/download")
 load_dotenv()
 @pytest.fixture(scope="session")  # DB connection fixture / about scope in 'about_scope_for_pytest_fixture' file
 def db_connection():
@@ -43,6 +46,9 @@ def db_cursor(db_connection):
 
 @pytest.fixture()  # webdriver fixture
 def driver():
+    prefs = {
+        "download.default_directory": download_path
+    }
     headless = os.getenv("HEADLESS", "false").lower() == "true"
     options = Options()
     if headless:
@@ -51,6 +57,7 @@ def driver():
     # chrome_options.add_argument("--incognito")
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--disable-cache")
+    options.add_experimental_option("prefs", prefs)
     driver = webdriver.Chrome(options=options)
     driver.implicitly_wait(10)
     yield driver

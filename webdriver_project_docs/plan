@@ -1,3 +1,7 @@
+Action chains -
+
+
+
 Inlay hints -> Done
 'TODO' -> Done
 Implicitly wait -> Done
@@ -27,8 +31,8 @@ dynamic locators - done
 decorators - *args and **kwargs - done
 
 
-Names in Python -
-logger, html report, screenshots -
+Names in Python - Done
+logger, html report, screenshots - Done
 
 
 
