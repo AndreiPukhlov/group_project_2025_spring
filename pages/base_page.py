@@ -1,4 +1,4 @@
-from selenium.webdriver import ActionChains
+from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait as WAIT
@@ -14,9 +14,11 @@ class BasePage(object):
         self.action = ActionChains(self.driver)
         self.attribute_name = attribute_name
 
+    # Navigation
     def open(self):
         self.driver.get(self.url)
 
+    # Element Interaction
     def get_element_attribute(self, locator, attribute_name, timeout=None):
         return (WAIT(self.driver, timeout or self.timeout)
                 .until(EC.visibility_of_element_located(locator)).get_attribute(attribute_name))
@@ -48,12 +50,15 @@ class BasePage(object):
     def right_click(self, locator):
         self.action.context_click(self.element_is_visible(locator)).perform()
 
-    def click_with_js(self, element):
-        self.driver.execute_script("arguments[0].click();", element)
+    def get_element_color(self, locator):
+        element = self.get_element_by_locator(locator)
+        color = element.value_of_css_property("color")
+        return color
 
-    def scroll_to_element(self, element):
-        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center', "
-                                   "inline: 'nearest'});", element)
+    def get_element_content(self, locator):
+        element = self.get_element_by_locator(locator)
+        content = element.value_of_css_property("content")
+        return content
 
     def select_by_text(self, locator, txt):
         Select(self.element_is_visible(locator)).select_by_visible_text(txt)
@@ -64,43 +69,15 @@ class BasePage(object):
     def get_element_by_locator(self, locator):
         return self.element_is_visible(locator)
 
-# windows methods
-    def get_window_handles(self):
-        return self.driver.window_handles
+    # Js element interactions
+    def click_with_js(self, locator):
+        element = self.element_is_visible(locator)
+        self.driver.execute_script("arguments[0].click();", element)
 
-    def switch_to_window(self, window):
-        self.driver.switch_to.window(window)
-
-    def close_window(self):
-        self.driver.close()
-
-    def get_css_property(self, locator, property_name):
-        data = self.element_is_visible(locator)
-        return data.value_of_css_property(property_name)
-
-# alerts methods
-    def alert(self):
-        return self.driver.switch_to.alert
-
-    def get_alert_text(self):
-        alert_text = self.alert().text
-        return alert_text
-
-    def alert_accept(self):
-        self.alert().accept()
-
-    def alert_send_prompt(self, prompt):
-        self.alert().send_keys(prompt)
-
-    def alert_dismiss(self):
-        self.alert().dismiss()
-
-    def switch_to_iframe(self, locator):
-        iframe = self.element_is_visible(locator)
-        self.driver.switch_to.frame(iframe)
-
-    def switch_out_of_iframe(self):
-        self.driver.switch_to.default_content()
+    def scroll_to_element(self, locator):
+        element = self.element_is_visible(locator)
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center', "
+                                   "inline: 'nearest'});", element)
 
     def get_element_after(self, locator):
         element = self.element_is_visible(locator)
@@ -120,12 +97,41 @@ class BasePage(object):
                 """, element)
         return content
 
-    def get_element_color(self, locator):
-        element = self.get_element_by_locator(locator)
-        color = element.value_of_css_property("color")
-        return color
+    # windows methods
+    def get_window_handles(self):
+        return self.driver.window_handles
 
-    def get_element_content(self, locator):
-        element = self.get_element_by_locator(locator)
-        content = element.value_of_css_property("content")
-        return content
+    def switch_to_window(self, window):
+        self.driver.switch_to.window(window)
+
+    def close_window(self):
+        self.driver.close()
+
+    def get_css_property(self, locator, property_name):
+        data = self.element_is_visible(locator)
+        return data.value_of_css_property(property_name)
+
+    # alerts methods
+    def alert(self):
+        return self.driver.switch_to.alert
+
+    def get_alert_text(self):
+        alert_text = self.alert().text
+        return alert_text
+
+    def alert_accept(self):
+        self.alert().accept()
+
+    def alert_send_prompt(self, prompt):
+        self.alert().send_keys(prompt)
+
+    def alert_dismiss(self):
+        self.alert().dismiss()
+
+    # iFrame methods
+    def switch_to_iframe(self, locator):
+        iframe = self.element_is_visible(locator)
+        self.driver.switch_to.frame(iframe)
+
+    def switch_out_of_iframe(self):
+        self.driver.switch_to.default_content()

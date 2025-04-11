@@ -1,4 +1,7 @@
 import logging
+import time
+
+from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.common.by import By
 from pathlib import Path
 from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female, \
@@ -250,6 +253,22 @@ class TestSampleForm:
         page_sp.switch_to_window(windows[-1])
         page_sp.close_window()
         logger.info("Switched to the last opened window(original) and closed it")
+
+    def test_action_chains_plus_keys(self, driver):
+        page_sp = SampleFormPage(driver, url)
+        page_sp.open()
+
+        time.sleep(3)
+        element = page_sp.element_is_visible(ADDITIONAL_INFO_IFRAME)
+        ActionChains(driver).move_to_element(element).perform()
+        ActionChains(driver).move_to_element(page_sp.element_is_visible(ADDITIONAL_INFO_IFRAME)).perform()
+
+        time.sleep(5)
+        page_sp.click_with_js(NAME_FIELD)
+        page_sp.element_is_visible(FIRST_NAME_FIELD).send_keys(Keys.SHIFT, 'j')
+        time.sleep(3)
+        page_sp.element_is_visible(FIRST_NAME_FIELD).send_keys(Keys.ENTER)
+        time.sleep(5)
 
     def all_required_fields(self, page_sp):
         page_sp.element_is_visible(NAME_FIELD).click()
