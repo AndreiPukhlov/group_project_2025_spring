@@ -1,4 +1,7 @@
+import time
+
 import pytest
+from selenium.webdriver import Keys
 
 from data.admin_test_data import TestData
 from data.locators.login_locators import LoginPageLocators
@@ -68,6 +71,19 @@ class TestLogin:
         # error_messages = driver.find_elements(locators.REQUIRED_ERROR_MESSAGE_LOCATOR)
         assert (error_messages[0].text == data.REQUIRED_FIELD_ERROR_MESSAGE and
                 error_messages[1].text == data.REQUIRED_FIELD_ERROR_MESSAGE)
+
+    def test_navigation(self, driver):
+        page = LoginPage(driver, url.LOGIN_URL)
+        page.open()
+        page.element_is_visible(("css selector", '[name="username"]')).send_keys("Admin")
+        time.sleep(3)
+        page.element_is_visible(("css selector", '[name="username"]')).send_keys(Keys.TAB)
+        time.sleep(3)
+        page.element_is_visible(("css selector", '[name="password"]')).send_keys(data.ADMIN_PASSWORD)
+        page.element_is_visible(("css selector", '[name="password"]')).send_keys(Keys.TAB)
+        page.element_is_visible(locators.LOGIN_BUTTON_LOCATOR).send_keys(Keys.ENTER)
+        time.sleep(3)
+
 
     @pytest.mark.skip(reason="This feature is not ready yet")
     def test_password_bullet_points(self, driver):
