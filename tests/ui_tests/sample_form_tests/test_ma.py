@@ -311,9 +311,7 @@ class TestSampleForm:
 
         page_sp.element_is_visible(RESET_BUTTON).click()
         logger.info("Clicked reset button")
-        top_container = driver.find_element(By.CSS_SELECTOR, "div.col-xs-12.col-md-8")
-        logger.info("Got first container")
-        top_container_inputs = top_container.find_elements(By.CSS_SELECTOR, "input")
+        top_container_inputs = page_sp.elements_are_present((By.CSS_SELECTOR, "div.col-md-8 input, div.col-md-8 textarea"))
 
         for input_field in top_container_inputs:
             assert input_field.get_attribute("value") == ""
