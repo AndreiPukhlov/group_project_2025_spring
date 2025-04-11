@@ -7,6 +7,7 @@ from pathlib import Path
 from data.generators.sample_form_generator import generate_sample_person_male, generate_sample_person_female, \
     random_choice_generator, valid_password_five_chars, dob_generator_select
 from pages.sample_form_page import SampleFormPage
+from pages.usps import USPSPage
 
 person = generate_sample_person_male()
 person2 = generate_sample_person_female()
@@ -258,17 +259,17 @@ class TestSampleForm:
         page_sp = SampleFormPage(driver, url)
         page_sp.open()
 
-        time.sleep(3)
+        time.sleep(1)
         element = page_sp.element_is_visible(ADDITIONAL_INFO_IFRAME)
         ActionChains(driver).move_to_element(element).perform()
         ActionChains(driver).move_to_element(page_sp.element_is_visible(ADDITIONAL_INFO_IFRAME)).perform()
 
-        time.sleep(5)
+        time.sleep(1)
         page_sp.click_with_js(NAME_FIELD)
         page_sp.element_is_visible(FIRST_NAME_FIELD).send_keys(Keys.SHIFT, 'j')
-        time.sleep(3)
+        time.sleep(1)
         page_sp.element_is_visible(FIRST_NAME_FIELD).send_keys(Keys.ENTER)
-        time.sleep(5)
+        time.sleep(1)
 
     def all_required_fields(self, page_sp):
         page_sp.element_is_visible(NAME_FIELD).click()
@@ -280,3 +281,33 @@ class TestSampleForm:
         page_sp.element_is_visible(PASSWORD_FIELD).send_keys(USER_PASSWORD)
         page_sp.element_is_visible(CONFIRM_PASSWORD_FIELD).send_keys(USER_PASSWORD)
         page_sp.element_is_visible(PRIVACY_POLICY_CHECKBOX).click()
+
+    # test cases for USPS site
+    def test_usps_search(self, driver):
+        locator_search_field = (By.ID, "home-input")
+        page_usps = USPSPage(driver, "https://www.usps.com/")
+        page_usps.open()
+        page_usps.element_is_visible(locator_search_field).send_keys(Keys.SHIFT, 'P')
+        page_usps.element_is_visible(locator_search_field).send_keys(Keys.SHIFT, 'A')
+        page_usps.element_is_visible(locator_search_field).send_keys(Keys.SHIFT, 'R')
+        page_usps.element_is_visible(locator_search_field).send_keys(Keys.SHIFT, 'C')
+        page_usps.element_is_visible(locator_search_field).send_keys(Keys.SHIFT, 'E')
+        page_usps.element_is_visible(locator_search_field).send_keys(Keys.SHIFT, 'L')
+        page_usps.element_is_visible(locator_search_field).send_keys(Keys.ENTER)
+        time.sleep(2)
+
+    def test_action_chains_move_to_element_usps(self, driver):
+        page_usps = USPSPage(driver, "https://www.usps.com/")
+        page_usps.open()
+        element1 = page_usps.element_is_visible((By.XPATH, "//a[text()='Send']"))
+        element2 = page_usps.element_is_visible((By.XPATH, "//a[text()='Receive']"))
+        element3 = page_usps.element_is_visible((By.XPATH, "//a[text()='Shop']"))
+        element4 = page_usps.element_is_visible((By.XPATH, "//a[text()='Business']"))
+        element5 = page_usps.element_is_visible((By.XPATH, "//a[text()='International']"))
+        element6 = page_usps.element_is_visible((By.XPATH, "//a[text()='Help']"))
+        (ActionChains(driver).move_to_element(element1).move_to_element(element2).move_to_element(element3)
+         .move_to_element(element4).move_to_element(element5).move_to_element(element6).perform())
+
+        (ActionChains(driver).move_to_element(element5).move_to_element(element4).move_to_element(element3)
+         .move_to_element(element2).move_to_element(element1).move_to_element(element6).perform())
+        time.sleep(2)
